@@ -1,0 +1,42 @@
+.dashboardContainer {
+  width: 100%;
+}
+
+.searchBar {
+  display: flex;
+  width: 100%;
+  background-color: green;
+}
+
+.dashboardContent {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  background-color: var(--secondary);
+}
+
+.pageTitle {
+  font-size: 56px;
+  font-weight: lighter;
+  letter-spacing: 2px;
+  color: white;
+  margin: 0;
+}
+
+.templateList {
+  margin-top: 20px;
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+}
+
+.workoutTemplate {
+  width: 300px;
+  height: 200px;
+  padding: 10px;
+  border-radius: var(--card-radius);
+  background-color: var(--primary);
+  border: 3px solid rgb(130, 129, 128);
+}
