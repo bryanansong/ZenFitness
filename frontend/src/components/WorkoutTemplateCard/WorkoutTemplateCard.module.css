@@ -4,8 +4,14 @@
   padding: 10px;
   border-radius: var(--card-radius);
   background-color: var(--primary);
-  border: 3px solid rgb(130, 129, 128);
   cursor: pointer;
+  border: 3px solid rgb(255, 255, 255, 0.2);
+  transition: border 1s ease;
+}
+
+.container:hover {
+  border: 3px solid rgb(130, 129, 128);
+  transition: border 0.3s ease;
 }
 
 .cardTitle {
