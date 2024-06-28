@@ -1,0 +1,23 @@
+.container {
+  width: 300px;
+  height: 200px;
+  padding: 10px;
+  border-radius: var(--card-radius);
+  background-color: var(--primary);
+  border: 3px solid rgb(130, 129, 128);
+  cursor: pointer;
+}
+
+.cardTitle {
+  margin: 0px;
+  font-weight: 200;
+  font-size: 24px;
+}
+
+.exerciseItem {
+  margin: 0px;
+  margin-top: 5px;
+  font-size: 16px;
+  font-weight: 300;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.3);
+}
