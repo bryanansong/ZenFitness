@@ -1,0 +1,40 @@
+.sideBar {
+  width: 16vw;
+  min-width: 200px;
+  max-width: 300px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  background-color: var(--primary);
+}
+
+.profile,
+.sidebarSection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 1px transparent solid;
+  transition: all 0.9s ease;
+}
+
+.profile:hover,
+.sidebarSection:hover {
+  border-radius: 8px;
+  border: 1px white solid;
+  transition: all 0.5s ease;
+}
+.sectionName {
+  display: flex;
+  flex: 5;
+  padding-left: 5px;
+  font-size: 26px;
+  font-weight: lighter;
+}
+
+.svg {
+  display: flex;
+  flex: 2;
+  justify-content: center;
+}
