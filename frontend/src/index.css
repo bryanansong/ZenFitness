@@ -12,7 +12,10 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  --primary: #09000B;
+  --primary: #1E1E1E;
+  --secondary: #2C2C2C;
+
+  --card-radius: 10px;
 }
 
 a {

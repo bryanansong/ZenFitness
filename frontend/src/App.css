@@ -4,3 +4,8 @@
   width: 100vw;
   min-height: 100vh;
 }
+
+.app {
+  display: flex;
+  background-color: var(--secondary);
+}
