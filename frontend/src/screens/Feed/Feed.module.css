@@ -1,0 +1,22 @@
+.container {
+  width: 100%;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  background-color: var(--secondary);
+}
+
+.pageTitle {
+  font-size: 56px;
+  font-weight: lighter;
+  letter-spacing: 2px;
+  color: white;
+  margin: 0;
+}
+
+.postList {
+  
+}
