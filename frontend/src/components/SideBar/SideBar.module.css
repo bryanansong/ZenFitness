@@ -7,6 +7,7 @@
   flex-direction: column;
   gap: 30px;
   background-color: var(--primary);
+  border-right: var(--border-styling);
 }
 
 .profile,
