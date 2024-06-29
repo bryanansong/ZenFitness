@@ -1,7 +1,12 @@
+import { useState } from "react";
 import Header from "../../components/Header/Header";
+import SessionHistory from "../../components/SessionHistory/SessionHistory";
 import styles from "./History.module.css";
 
 const History = () => {
+  const [streak, setStreak] = useState(10);
+  const [pastSessions, setPastSessions] = useState([]);
+
   return (
     <div className={styles.container}>
       <Header />
@@ -30,14 +35,26 @@ const History = () => {
               </div>
             </div>
             <div className={`${styles.tile} ${styles.overviewBottom}`}>
-              <div className={`${styles.streakTile} ${styles.streakLeft}`}>You've logged workouts</div>
-              <div className={`${styles.streakTile} ${styles.streakMid}`}>10</div>
-              <div className={`${styles.streakTile} ${styles.streakRight}`}>Days In A Row!</div>
+              <div className={`${styles.streakTile} ${styles.streakLeft}`}>
+                You've logged workouts
+              </div>
+              <div className={`${styles.streakTile} ${styles.streakMid}`}>
+                {streak}
+              </div>
+              <div className={`${styles.streakTile} ${styles.streakRight}`}>
+                Days In A Row!
+              </div>
             </div>
           </div>
         </div>
         <p className={styles.pageTitle}>Past Sessions</p>
-        <div className={styles.sessionsTiles}></div>
+        <div className={styles.pastSessions}>
+          {pastSessions.map((session, index) => (
+            <div key={index}>
+              <SessionHistory />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
