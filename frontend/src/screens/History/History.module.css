@@ -111,12 +111,14 @@
   height: 100%;
   text-align: center;
 }
+
 .streakMid {
   font-size: 10rem;
   margin: 0;
   display: flex;
   justify-content: center;
 }
+
 .streakRight {
   font-size: 2.5rem;
   height: 100%;
@@ -124,4 +126,11 @@
   display: flex;
   justify-content: flex-end;
   align-items: end;
+}
+
+.pastSessions {
+  display: flex;
+  flex-direction: column;
+  max-height: 80vh;
+  gap: 20px;
 }
