@@ -15,6 +15,8 @@
   --primary: #1E1E1E;
   --secondary: #2C2C2C;
 
+  --border-styling: 1px solid rgb(255, 255, 255, 0.2);
+
   --card-radius: 10px;
 }
 

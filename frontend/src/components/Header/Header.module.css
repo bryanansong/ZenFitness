@@ -1,0 +1,27 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 80px;
+  background-color: var(--primary);
+  border-bottom: var(--border-styling);
+}
+
+.searchBar {
+  display: flex;
+  width: 55%;
+  margin: 20px;
+  padding: 0px 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px ;
+  background-color: var(--secondary);
+  outline: 1px transparent solid;
+  transition: outline 1s ease;
+}
+
+.searchBar:focus, .searchBar:active {
+  outline: 1px rgba(255, 255, 255, 0.8) solid;
+  transition: outline 0.3s ease;
+}
