@@ -13,13 +13,13 @@ const Feed = () => {
         <div className={styles.postList}>
           {postList.map((post, index) => (
             <div key={index}>
-              <FeedListItem post={post}/>
+              <FeedListItem post={post} />
             </div>
           ))}
         </div>
       </div>
     </div>
   );
-}
+};
 
-export default Feed
+export default Feed;
