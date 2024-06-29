@@ -18,6 +18,9 @@
 }
 
 .postList {
+  display: flex;
+  flex-direction: column;
   overflow-y: auto;
   max-height: 80vh;
+  gap: 20px;
 }
