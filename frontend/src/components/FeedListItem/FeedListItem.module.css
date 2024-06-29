@@ -1,0 +1,73 @@
+.container {
+  display: flex;
+  min-height: 150px;
+  padding: 10px;
+  border-radius: var(--card-radius);
+  background-color: var(--primary);
+  border: 3px solid rgb(255, 255, 255, 0.2);
+  transition: border 1s ease;
+}
+
+.container:hover {
+  border: 3px solid rgb(130, 129, 128);
+  transition: border 0.3s ease;
+
+  & .divider {
+    border: 1px solid rgb(130, 129, 128);
+    transition: border 0.3s ease;
+  }
+}
+
+.overview {
+  padding: 0px 10px;
+  width: 400px;
+}
+
+.templateName {
+  font-weight: 200;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  padding: 5px 0px;
+  border-radius: var(--card-radius);
+  background-color: var(--secondary);
+  border: 3px transparent solid;
+  user-select: none;
+  cursor: pointer;
+}
+
+.button:hover {
+  border: 3px solid white;
+}
+
+.divider {
+  outline: none;
+  border-radius: 15px;
+  border: 1px solid rgb(255, 255, 255, 0.2);
+  transition: border 1s ease;
+}
+
+.exerciseList {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0px 30px;
+  width: 100%;
+  padding: 0px 10px;
+}
+
+.exerciseItem {
+  padding: 0px 40px;
+  border-radius: 20px;
+  width: fit-content;
+  height: max-content;
+  background-color: var(--secondary);
+  user-select: none;
+}
+
+.exerciseItem:hover {
+  background-color: #6f6e6e;
+  transition: background-color 0.2s ease;
+}
