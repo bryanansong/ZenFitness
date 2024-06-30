@@ -70,19 +70,19 @@ const SessionHistory: React.FC<SessionHistoryProps> = ({ session }) => {
       <p className={styles.cardTitle}>
         {session?.workoutTemplate?.name || "Full Body Day"}
         <span className={styles.dateAndDuration}>
-          <div>{formatDate(session.date)}</div>
-          <div>{`${session.duration / 60} mins`}</div>
+          <span>{formatDate(session.date)}</span>
+          <span>{`${session.duration / 60} mins`}</span>
         </span>
       </p>
       <div className={styles.exerciseList}>
         {session?.setRecords.map((set, index) => (
           <div key={index}>
             <p className={styles.exerciseItem}>
-              <div>{set.exercise.name}</div>
-              <div> |</div>
-              <div> {set.weight}lbs</div>
-              <div> |</div>
-              <div> {set.reps} reps</div>
+              <span>{set.exercise.name}</span>
+              <span> |</span>
+              <span> {set.weight}lbs</span>
+              <span> |</span>
+              <span> {set.reps} reps</span>
             </p>
           </div>
         ))}
