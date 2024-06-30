@@ -1,0 +1,27 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  min-height: 200px;
+  padding: 10px;
+  border-radius: var(--card-radius);
+  background-color: var(--primary);
+  cursor: pointer;
+  border: 5px solid rgb(255, 255, 255, 0.2);
+  transition: border 1s ease;
+  user-select: none;
+}
+
+.container:hover {
+  border: 5px solid rgb(130, 129, 128);
+  transition: border 0.3s ease;
+}
+
+.cardTitle {
+  margin: 0px;
+  font-weight: 300;
+  font-size: 54px;
+  text-align: center;
+  letter-spacing: 2px;
+}
