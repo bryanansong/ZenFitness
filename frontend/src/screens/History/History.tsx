@@ -3,9 +3,38 @@ import Header from "../../components/Header/Header";
 import SessionHistory from "../../components/SessionHistory/SessionHistory";
 import styles from "./History.module.css";
 
+// TODO:  Update all types
+type Exercise = {
+  id: number;
+  name: string;
+  videoUrl: string;
+  workoutTemplateExercises: any;
+  createdAt: Date;
+};
+
+type SetRecord = {
+  id: number;
+  workoutSessionId: number;
+  workoutSession: any;
+  exerciseId: number;
+  exercise: Exercise;
+  reps: number;
+  weight: number;
+  createdAt: Date;
+};
+
+type Session = {
+  date: Date;
+  workoutTemplate: any;
+  duration: number; // in seconds
+  completionStatus: "COMPLETED" | "PARTIAL" | null;
+  setRecords: SetRecord[];
+};
+
+
 const History = () => {
   const [streak, setStreak] = useState(10);
-  const [pastSessions, setPastSessions] = useState([]);
+  const [pastSessions, setPastSessions] = useState<Session[]>([]);
 
   return (
     <div className={styles.container}>
@@ -51,7 +80,7 @@ const History = () => {
         <div className={styles.pastSessions}>
           {pastSessions.map((session, index) => (
             <div key={index}>
-              <SessionHistory />
+              <SessionHistory session={session} />
             </div>
           ))}
         </div>
