@@ -1,0 +1,49 @@
+.container {
+  width: 425px;
+  min-height: 200px;
+  padding: 10px;
+  border-radius: var(--card-radius);
+  background-color: var(--primary);
+  cursor: pointer;
+  border: 3px solid rgb(255, 255, 255, 0.2);
+  transition: border 1s ease;
+}
+
+.container:hover {
+  border: 3px solid rgb(130, 129, 128);
+  transition: border 0.3s ease;
+}
+
+.cardTitle {
+  margin: 0px;
+  font-weight: 400;
+  font-size: 26px;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 0px 20px;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.dateAndDuration {
+  font-weight: 200;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin: 0px;
+  font-size: 18px;
+}
+
+.exerciseItem {
+  margin: 0px;
+  margin-top: 5px;
+  font-size: 16px;
+  font-weight: 300;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.3);
+
+  /* background-color: purple; */
+  display: flex;
+  justify-content: space-between;
+}
