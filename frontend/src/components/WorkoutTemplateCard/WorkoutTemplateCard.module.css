@@ -1,6 +1,6 @@
 .container {
   width: 300px;
-  height: 200px;
+  min-height: 200px;
   padding: 10px;
   border-radius: var(--card-radius);
   background-color: var(--primary);
@@ -16,8 +16,9 @@
 
 .cardTitle {
   margin: 0px;
-  font-weight: 200;
-  font-size: 24px;
+  font-weight: 300;
+  letter-spacing: 2px;
+  font-size: 28px;
 }
 
 .exerciseItem {
