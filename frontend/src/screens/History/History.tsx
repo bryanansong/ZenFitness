@@ -6,6 +6,7 @@ import styles from "./History.module.css";
 const History = () => {
   const [totalTimeWorkingout, setTotalTimeWorkingout] = useState(150);
   const [totalWorkouts, setTotalWorkouts] = useState(50);
+  const [favoriteExercise, setFavoriteExercise] = useState("Bicep Curl");
   const [streak, setStreak] = useState(10);
   const [pastSessions, setPastSessions] = useState<WorkoutSession[]>([]);
 
@@ -32,7 +33,7 @@ const History = () => {
               </div>
               <div className={styles.tile}>
                 <p className={styles.tileText}>
-                  {"Bicep Curl"} is your favorite exercise
+                  {favoriteExercise} is your favorite exercise
                 </p>
               </div>
             </div>
