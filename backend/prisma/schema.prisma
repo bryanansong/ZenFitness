@@ -80,7 +80,7 @@ model SetRecord {
   workoutSession   WorkoutSession @relation(fields: [workoutSessionId], references: [id])
   exercise         Exercise       @relation(fields: [exerciseId], references: [id])
   reps             Int
-  weight           Float
+  weight           Float // In Pounds ( lbs )
 }
 
 model Vote {
