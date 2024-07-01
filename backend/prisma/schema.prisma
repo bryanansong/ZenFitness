@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               Int               @id @default(autoincrement())
+  username         String            @unique
+  email            String            @unique
+  password         String
+  workoutTemplates WorkoutTemplate[]
+  workoutSessions  WorkoutSession[]
+  following        Follow[]          @relation("UserFollowing")
+  followers        Follow[]          @relation("UserFollowers")
+  votes            Vote[]
+}
+
+model Follow {
+  id          Int      @id @default(autoincrement())
+  followerId  Int
+  followingId Int
+  createdAt   DateTime @default(now())
+  follower    User     @relation("UserFollowing", fields: [followerId], references: [id])
+  following   User     @relation("UserFollowers", fields: [followingId], references: [id])
+
+  @@unique([followerId, followingId])
+}
+
+model WorkoutTemplate {
+  id              Int                       @id @default(autoincrement())
+  userId          Int
+  user            User                      @relation(fields: [userId], references: [id])
+  name            String
+  isPublic        Boolean                   @default(false)
+  exercises       WorkoutTemplateExercise[]
+  workoutSessions WorkoutSession[]
+  copyCount       Int                       @default(0)
+  votes           Vote[]
+  createdAt       DateTime                  @default(now())
+}
+
+model WorkoutTemplateExercise {
+  workoutTemplateId Int
+  exerciseId        Int
+  workoutTemplate   WorkoutTemplate @relation(fields: [workoutTemplateId], references: [id])
+  exercise          Exercise        @relation(fields: [exerciseId], references: [id])
+
+  @@id([workoutTemplateId, exerciseId])
+}
+
+model Exercise {
+  id                       Int                       @id @default(autoincrement())
+  name                     String
+  videoUrl                 String?
+  workoutTemplateExercises WorkoutTemplateExercise[]
+  SetRecord                SetRecord[]
+}
+
+model WorkoutSession {
+  id                Int              @id @default(autoincrement())
+  userId            Int
+  workoutTemplateId Int
+  date              DateTime
+  duration          Int // in seconds
+  completionStatus  CompletionStatus
+  user              User             @relation(fields: [userId], references: [id])
+  workoutTemplate   WorkoutTemplate  @relation(fields: [workoutTemplateId], references: [id])
+  setRecords        SetRecord[]
+  createdAt         DateTime         @default(now())
+}
+
+model SetRecord {
+  id               Int            @id @default(autoincrement())
+  workoutSessionId Int
+  exerciseId       Int
+  workoutSession   WorkoutSession @relation(fields: [workoutSessionId], references: [id])
+  exercise         Exercise       @relation(fields: [exerciseId], references: [id])
+  reps             Int
+  weight           Float
+}
+
+model Vote {
+  id                Int             @id @default(autoincrement())
+  userId            Int
+  workoutTemplateId Int
+  voteType          VoteType
+  user              User            @relation(fields: [userId], references: [id])
+  workoutTemplate   WorkoutTemplate @relation(fields: [workoutTemplateId], references: [id])
+
+  @@unique([userId, workoutTemplateId])
+}
+
+enum CompletionStatus {
+  COMPLETED
+  PARTIAL
+}
+
+enum VoteType {
+  UPVOTE
+  DOWNVOTE
+}
