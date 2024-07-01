@@ -8,15 +8,15 @@ datasource db {
 }
 
 model User {
-  id                Int                @id @default(autoincrement())
-  username          String             @unique
-  email             String             @unique
-  password          String
-  workoutTemplates  WorkoutTemplate[]
-  workoutSessions   WorkoutSession[]
-  following  Follow[]           @relation("UserFollowing")
-  followers  Follow[]           @relation("UserFollowers")
-  votes             Vote[]
+  id               Int               @id @default(autoincrement())
+  username         String            @unique
+  email            String            @unique
+  password         String
+  workoutTemplates WorkoutTemplate[]
+  workoutSessions  WorkoutSession[]
+  following        Follow[]          @relation("UserFollowing")
+  followers        Follow[]          @relation("UserFollowers")
+  votes            Vote[]
 }
 
 model Follow {
@@ -31,16 +31,16 @@ model Follow {
 }
 
 model WorkoutTemplate {
-  id              Int                      @id @default(autoincrement())
+  id              Int                       @id @default(autoincrement())
   userId          Int
-  user            User                     @relation(fields: [userId], references: [id])
+  user            User                      @relation(fields: [userId], references: [id])
   name            String
-  isPublic        Boolean                  @default(false)
+  isPublic        Boolean                   @default(false)
   exercises       WorkoutTemplateExercise[]
   workoutSessions WorkoutSession[]
-  copyCount       Int                      @default(0)
+  copyCount       Int                       @default(0)
   votes           Vote[]
-  createdAt       DateTime                 @default(now())
+  createdAt       DateTime                  @default(now())
 }
 
 model WorkoutTemplateExercise {
@@ -53,23 +53,24 @@ model WorkoutTemplateExercise {
 }
 
 model Exercise {
-  id                     Int                      @id @default(autoincrement())
-  name                   String
-  videoUrl               String?
+  id                       Int                       @id @default(autoincrement())
+  name                     String
+  videoUrl                 String?
   workoutTemplateExercises WorkoutTemplateExercise[]
+  SetRecord                SetRecord[]
 }
 
 model WorkoutSession {
-  id                Int             @id @default(autoincrement())
+  id                Int              @id @default(autoincrement())
   userId            Int
   workoutTemplateId Int
   date              DateTime
-  duration          Int             // in seconds
+  duration          Int // in seconds
   completionStatus  CompletionStatus
-  user              User            @relation(fields: [userId], references: [id])
-  workoutTemplate   WorkoutTemplate @relation(fields: [workoutTemplateId], references: [id])
+  user              User             @relation(fields: [userId], references: [id])
+  workoutTemplate   WorkoutTemplate  @relation(fields: [workoutTemplateId], references: [id])
   setRecords        SetRecord[]
-  createdAt         DateTime        @default(now())
+  createdAt         DateTime         @default(now())
 }
 
 model SetRecord {
@@ -83,12 +84,12 @@ model SetRecord {
 }
 
 model Vote {
-  id               Int            @id @default(autoincrement())
-  userId           Int
+  id                Int             @id @default(autoincrement())
+  userId            Int
   workoutTemplateId Int
-  voteType         VoteType
-  user             User           @relation(fields: [userId], references: [id])
-  workoutTemplate  WorkoutTemplate @relation(fields: [workoutTemplateId], references: [id])
+  voteType          VoteType
+  user              User            @relation(fields: [userId], references: [id])
+  workoutTemplate   WorkoutTemplate @relation(fields: [workoutTemplateId], references: [id])
 
   @@unique([userId, workoutTemplateId])
 }
