@@ -3,38 +3,12 @@ import Header from "../../components/Header/Header";
 import SessionHistory from "../../components/SessionHistory/SessionHistory";
 import styles from "./History.module.css";
 
-// TODO:  Update all types
-type Exercise = {
-  id: number;
-  name: string;
-  videoUrl: string;
-  workoutTemplateExercises: any;
-  createdAt: Date;
-};
-
-type SetRecord = {
-  id: number;
-  workoutSessionId: number;
-  workoutSession: any;
-  exerciseId: number;
-  exercise: Exercise;
-  reps: number;
-  weight: number;
-  createdAt: Date;
-};
-
-type Session = {
-  date: Date;
-  workoutTemplate: any;
-  duration: number; // in seconds
-  completionStatus: "COMPLETED" | "PARTIAL" | null;
-  setRecords: SetRecord[];
-};
-
-
 const History = () => {
+  const [totalTimeWorkingout, setTotalTimeWorkingout] = useState(150);
+  const [totalWorkouts, setTotalWorkouts] = useState(50);
+  const [favoriteExercise, setFavoriteExercise] = useState("Bicep Curl");
   const [streak, setStreak] = useState(10);
-  const [pastSessions, setPastSessions] = useState<Session[]>([]);
+  const [pastSessions, setPastSessions] = useState<WorkoutSession[]>([]);
 
   return (
     <div className={styles.container}>
@@ -44,7 +18,7 @@ const History = () => {
         <div className={styles.overviewTiles}>
           <div className={styles.overviewSide}>
             <div className={`${styles.tile} ${styles.overviewLeft}`}>
-              <p className={styles.workoutsNumber}>50</p>
+              <p className={styles.workoutsNumber}>{totalWorkouts}</p>
               <p className={styles.tileHeroText}>Workouts performed so far</p>
             </div>
           </div>
@@ -52,20 +26,20 @@ const History = () => {
           <div className={styles.overviewSide}>
             <div className={styles.overviewUpper}>
               <div className={`${styles.tile} ${styles.timeTile}`}>
-                <p className={styles.timeTileHours}>150</p>
+                <p className={styles.timeTileHours}>{totalTimeWorkingout}</p>
                 <p className={styles.timeTileText}>
                   Total Hours Spent Working Out
                 </p>
               </div>
               <div className={styles.tile}>
                 <p className={styles.tileText}>
-                  {"Bicep Curl"} is your favorite exercise
+                  {favoriteExercise} is your favorite exercise
                 </p>
               </div>
             </div>
             <div className={`${styles.tile} ${styles.overviewBottom}`}>
               <div className={`${styles.streakTile} ${styles.streakLeft}`}>
-                You've logged workouts
+                You've Logged Workouts
               </div>
               <div className={`${styles.streakTile} ${styles.streakMid}`}>
                 {streak}

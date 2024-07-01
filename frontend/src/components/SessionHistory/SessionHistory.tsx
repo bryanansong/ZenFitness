@@ -1,35 +1,7 @@
 import styles from "./SessionHistory.module.css";
 
-// TODO: Update the types for all of these
-type Exercise = {
-  id: number;
-  name: string;
-  videoUrl: string;
-  workoutTemplateExercises: any;
-  createdAt: Date;
-};
-
-type SetRecord = {
-  id: number;
-  workoutSessionId: number;
-  workoutSession: any;
-  exerciseId: number;
-  exercise: Exercise;
-  reps: number;
-  weight: number;
-  createdAt: Date;
-};
-
-type Session = {
-  date: Date;
-  workoutTemplate: any;
-  duration: number; // in seconds
-  completionStatus: "COMPLETED" | "PARTIAL" | null;
-  setRecords: SetRecord[];
-};
-
 type SessionHistoryProps = {
-  session: Session;
+  session: WorkoutSession;
 };
 
 const SessionHistory: React.FC<SessionHistoryProps> = ({ session }) => {
@@ -68,10 +40,10 @@ const SessionHistory: React.FC<SessionHistoryProps> = ({ session }) => {
   return (
     <div className={styles.container}>
       <p className={styles.cardTitle}>
-        {session?.workoutTemplate?.name || "Full Body Day"}
+        {session.workoutTemplate.name}
         <span className={styles.dateAndDuration}>
           <span>{formatDate(session.date)}</span>
-          <span>{`${session.duration / 60} mins`}</span>
+          <span>{`${Math.round(session.duration / 60)} mins`}</span>
         </span>
       </p>
       <div className={styles.exerciseList}>
