@@ -1,14 +1,7 @@
 import styles from "./FeedListItem.module.css";
 
 type FeedListItemProps = {
-  post: {
-    name: string;
-    user: {
-      username: string;
-      createdAt: string;
-    };
-    exercises: Array<string>;
-  };
+  post: WorkoutTemplate,
 };
 
 const FeedListItem: React.FC<FeedListItemProps> = ({ post }) => {
@@ -21,9 +14,9 @@ const FeedListItem: React.FC<FeedListItemProps> = ({ post }) => {
       </div>
       <hr className={styles.divider} />
       <div className={styles.exerciseList}>
-        {post.exercises.map((exercise, index) => (
+        {post.exercises.map((workoutTemplateExercise, index) => (
           <div key={index} className={styles.exerciseItem}>
-            <p>{exercise}</p>
+            <p>{workoutTemplateExercise.exercise.name}</p>
           </div>
         ))}
       </div>
