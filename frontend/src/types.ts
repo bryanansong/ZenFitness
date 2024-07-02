@@ -1,14 +1,6 @@
 export {};
 
 declare global {
-  type Exercise = {
-    id: number;
-    name: string;
-    videoUrl: string;
-    workoutTemplateExercises: any;
-    createdAt: Date;
-  };
-
   type User = {
     id: number;
     username: string;
