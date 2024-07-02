@@ -4,10 +4,10 @@ import SessionHistory from "../../components/SessionHistory/SessionHistory";
 import styles from "./History.module.css";
 
 const History = () => {
-  const [totalTimeWorkingout, setTotalTimeWorkingout] = useState(150);
-  const [totalWorkouts, setTotalWorkouts] = useState(50);
-  const [favoriteExercise, setFavoriteExercise] = useState("Bicep Curl");
-  const [streak, setStreak] = useState(10);
+  const [totalTimeWorkingout, setTotalTimeWorkingout] = useState(0);
+  const [totalWorkouts, setTotalWorkouts] = useState(0);
+  const [favoriteExercise, setFavoriteExercise] = useState("...");
+  const [streak, setStreak] = useState(0);
   const [pastSessions, setPastSessions] = useState<WorkoutSession[]>([]);
 
   return (
