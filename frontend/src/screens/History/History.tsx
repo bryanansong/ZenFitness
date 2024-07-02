@@ -39,13 +39,13 @@ const History = () => {
             </div>
             <div className={`${styles.tile} ${styles.overviewBottom}`}>
               <div className={`${styles.streakTile} ${styles.streakLeft}`}>
-                You've Logged Workouts
+                You've logged workouts
               </div>
               <div className={`${styles.streakTile} ${styles.streakMid}`}>
                 {streak}
               </div>
               <div className={`${styles.streakTile} ${styles.streakRight}`}>
-                Days In A Row!
+                days in a row!
               </div>
             </div>
           </div>
