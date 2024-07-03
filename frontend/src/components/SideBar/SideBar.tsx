@@ -17,38 +17,38 @@ const SideBar = () => {
           Welcome, <br /> Bryan Ansong
         </p>
       </div>
-      <div className={styles.sidebarSection}>
-        <Link to={"/dashboard"}>
+      <Link to={`/dashboard`}>
+        <div className={styles.sidebarSection}>
           <div className={styles.svg}>
             <img src={dashboardIcon} alt="" />
           </div>
-        </Link>
-        <p className={styles.sectionName}>Dashboard</p>
-      </div>
-      <div className={styles.sidebarSection}>
-        <Link to={"/feed"}>
+          <p className={styles.sectionName}>Dashboard</p>
+        </div>
+      </Link>
+      <Link to={`/feed`}>
+        <div className={styles.sidebarSection}>
           <div className={styles.svg}>
             <img src={feedIcon} alt="" />
           </div>
-        </Link>
-        <p className={styles.sectionName}>Feed</p>
-      </div>
-      <div className={styles.sidebarSection}>
-        <Link to={`/history`}>
+          <p className={styles.sectionName}>Feed</p>
+        </div>
+      </Link>
+      <Link to={`/history`}>
+        <div className={styles.sidebarSection}>
           <div className={styles.svg}>
             <img src={historyIcon} alt="" />
           </div>
-        </Link>
-        <p className={styles.sectionName}>History</p>
-      </div>
-      <div className={styles.sidebarSection}>
-        <Link to={`/`}>
+          <p className={styles.sectionName}>History</p>
+        </div>
+      </Link>
+      <Link to={`/`}>
+        <div className={styles.sidebarSection}>
           <div className={styles.svg}>
             <img src={logoutIcon} alt="" />
           </div>
-        </Link>
-        <p className={styles.sectionName}>Logout</p>
-      </div>
+          <p className={styles.sectionName}>Logout</p>
+        </div>
+      </Link>
     </div>
   );
 };
