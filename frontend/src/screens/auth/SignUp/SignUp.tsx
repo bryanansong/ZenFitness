@@ -1,4 +1,5 @@
-import styles from "./SignUp.module.css"
+import styles from "./SignUp.module.css";
+import { Link } from "react-router-dom";
 
 const SignUp = () => {
   return (
@@ -25,9 +26,9 @@ const SignUp = () => {
             <input type="password" id="password" className={styles.input} />
           </div>
           <div className={styles.buttonGroup}>
-            <button type="button" className={styles.loginButton}>
+            <Link to={"/"} className={styles.loginButton}>
               Login
-            </button>
+            </Link>
             <button type="submit" className={styles.continueButton}>
               Continue
             </button>
@@ -36,6 +37,6 @@ const SignUp = () => {
       </div>
     </div>
   );
-}
+};
 
 export default SignUp;

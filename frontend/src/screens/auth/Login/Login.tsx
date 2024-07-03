@@ -1,4 +1,5 @@
 import styles from "./Login.module.css";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   return (
@@ -19,9 +20,9 @@ const Login = () => {
             <input type="password" id="password" className={styles.input} />
           </div>
           <div className={styles.buttonGroup}>
-            <button type="button" className={styles.signUpButton}>
-              Sign Up
-            </button>
+            <Link to={"/signup"} className={styles.signUpButton}>
+                Sign Up
+            </Link>
             <button type="submit" className={styles.continueButton}>
               Continue
             </button>
