@@ -26,9 +26,9 @@ const SignUp = () => {
             <input type="password" id="password" className={styles.input} />
           </div>
           <div className={styles.buttonGroup}>
-              <Link to={"/"} className={styles.loginButton}>
-                Login
-              </Link>
+            <Link to={"/"} className={styles.loginButton}>
+              Login
+            </Link>
             <button type="submit" className={styles.continueButton}>
               Continue
             </button>

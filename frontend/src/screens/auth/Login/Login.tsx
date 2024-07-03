@@ -20,10 +20,8 @@ const Login = () => {
             <input type="password" id="password" className={styles.input} />
           </div>
           <div className={styles.buttonGroup}>
-            <Link to={"/signup"}>
-              <button type="button" className={styles.signUpButton}>
+            <Link to={"/signup"} className={styles.signUpButton}>
                 Sign Up
-              </button>
             </Link>
             <button type="submit" className={styles.continueButton}>
               Continue
