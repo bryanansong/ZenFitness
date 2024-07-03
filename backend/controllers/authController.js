@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import { prisma } from "../utils/helpers.js";
 
 const signup = async (req, res) => {
-  const { email, password, name } = req.body;
+  const { email, password, username } = req.body;
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -11,7 +11,7 @@ const signup = async (req, res) => {
       data: {
         email,
         password: hashedPassword,
-        name,
+        username,
       },
     });
 
@@ -19,7 +19,7 @@ const signup = async (req, res) => {
       expiresIn: "1h",
     });
 
-    res.json({ token, user });
+    res.json({ token });
   } catch (error) {
     res.status(400).json({ error: "Unable to create user" });
   }
