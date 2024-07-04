@@ -77,10 +77,8 @@ const WorkoutTemplateModal: React.FC<WorkoutTemplateModalProps> = ({
       );
 
       if (response.ok) {
-        alert("Workout template created successfully!");
         closeModal();
       } else {
-        console.log("Here is the resposne: ", response);
         throw new Error("Failed to create workout templateeee");
       }
     } catch (error) {
@@ -90,7 +88,6 @@ const WorkoutTemplateModal: React.FC<WorkoutTemplateModalProps> = ({
 
   const handleCloseModal = (e: React.MouseEvent) => {
     e.stopPropagation();
-    // Clear all variables
     setWorkoutName("");
     setSearchTerm("");
     setExercises([]);
