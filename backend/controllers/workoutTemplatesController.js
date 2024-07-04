@@ -100,6 +100,12 @@ const getWorkoutTemplateInfo = async (req, res) => {
             exercise: true,
           },
         },
+        user: {
+          include: {
+            followers: true,
+            following: true,
+          },
+        },
       },
     });
 
@@ -117,7 +123,6 @@ const getWorkoutTemplateInfo = async (req, res) => {
   }
 };
 
-
 const getFeed = async (req, res) => {
   try {
     const workoutTemplates = await prisma.workoutTemplate.findMany({
@@ -130,7 +135,12 @@ const getFeed = async (req, res) => {
             exercise: true,
           },
         },
-        user: true,
+        user: {
+          include: {
+            followers: true,
+            following: true,
+          },
+        },
       },
     });
 
