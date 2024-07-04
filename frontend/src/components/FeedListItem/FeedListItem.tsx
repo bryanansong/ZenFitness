@@ -16,7 +16,7 @@ const FeedListItem: React.FC<FeedListItemProps> = ({ post }) => {
       <div className={styles.exerciseList}>
         {post.exercises.map((workoutTemplateExercise, index) => (
           <div key={index} className={styles.exerciseItem}>
-            <p>{workoutTemplateExercise.exercise.name}</p>
+            <p>{workoutTemplateExercise.exercise.name.replaceAll("_", " ")}</p>
           </div>
         ))}
       </div>
