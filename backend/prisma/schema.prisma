@@ -54,8 +54,7 @@ model WorkoutTemplateExercise {
 
 model Exercise {
   id                       Int                       @id @default(autoincrement())
-  name                     String
-  videoUrl                 String?
+  name                     String                    @unique
   workoutTemplateExercises WorkoutTemplateExercise[]
   SetRecord                SetRecord[]
 }
