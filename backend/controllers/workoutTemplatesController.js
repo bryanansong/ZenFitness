@@ -53,6 +53,11 @@ const getWorkoutTemplates = async (req, res) => {
   try {
     const userId = req.userId;
 
+    if (!userId) {
+      console.error("User ID is missing in the request");
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
     const workoutTemplates = await prisma.workoutTemplate.findMany({
       where: {
         userId: userId,
