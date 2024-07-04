@@ -17,7 +17,9 @@ const WorkoutTemplateCard: React.FC<WorkoutTemplateCardProps> = ({
       <div className={styles.exerciseList}>
         {template.exercises.map((workoutTemplateExercise, index) => (
           <div key={index}>
-            <p className={styles.exerciseItem}>{workoutTemplateExercise.exercise.name}</p>
+            <p className={styles.exerciseItem}>
+              {workoutTemplateExercise.exercise.name.replaceAll("_", " ")}
+            </p>
           </div>
         ))}
       </div>
