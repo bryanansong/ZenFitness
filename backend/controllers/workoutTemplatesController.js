@@ -1,7 +1,6 @@
 import { prisma } from "../utils/helpers.js";
 
 const createWorkoutTemplate = async (req, res) => {
-  console.log("We got to the controller!!!");
   const { name, exercises } = req.body;
   const userId = req.userId;
 
@@ -50,4 +49,30 @@ const createWorkoutTemplate = async (req, res) => {
   }
 };
 
-export { createWorkoutTemplate };
+const getWorkoutTemplates = async (req, res) => {
+  try {
+    const userId = req.userId;
+
+    const workoutTemplates = await prisma.workoutTemplate.findMany({
+      where: {
+        userId: userId,
+      },
+      include: {
+        exercises: {
+          include: {
+            exercise: true,
+          },
+        },
+      },
+    });
+
+    res.json(workoutTemplates);
+  } catch (error) {
+    console.error("Error fetching workout templates:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching workout templates" });
+  }
+};
+
+export { createWorkoutTemplate, getWorkoutTemplates };
