@@ -45,7 +45,6 @@ declare global {
   type Exercise = {
     id: number;
     name: string;
-    videoUrl: string | null;
     workoutTemplateExercises: WorkoutTemplateExercise[];
     setRecords: SetRecord[];
   };
