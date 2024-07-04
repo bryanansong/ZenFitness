@@ -6,7 +6,9 @@ type CreateTemplateCardProps = {
   fetchTemplates: () => void;
 };
 
-const CreateTemplateCard: React.FC<CreateTemplateCardProps> = ({ fetchTemplates }) => {
+const CreateTemplateCard: React.FC<CreateTemplateCardProps> = ({
+  fetchTemplates,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleClick = () => {
     setIsModalOpen(true);
