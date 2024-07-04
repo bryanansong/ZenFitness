@@ -1,15 +1,25 @@
+import WorkoutTemplateModal from "../WorkoutTemplateModal/WorkoutTemplateModal";
 import styles from "./CreateTemplateCard.module.css";
+import { useState } from "react";
 
 const CreateTemplateCard = () => {
-  // TODO: Make this trigger the opneing of a modal to create a modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const handleClick = () => {
-    console.log("Opened Workout Creation Modal");
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    console.log("Closing modal", "open? ", isModalOpen);
+    setIsModalOpen(false);
   };
 
   return (
-    <div className={styles.container} onClick={() => handleClick()}>
-      <p className={styles.cardTitle}>Create New Template</p>
-    </div>
+    <>
+      {isModalOpen && <WorkoutTemplateModal closeModal={closeModal} />}
+      <div className={styles.container} onClick={() => handleClick()}>
+        <p className={styles.cardTitle}>Create workout template</p>
+      </div>
+    </>
   );
 };
 
