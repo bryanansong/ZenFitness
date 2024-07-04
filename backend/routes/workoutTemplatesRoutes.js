@@ -4,6 +4,6 @@ import { createWorkoutTemplate } from "../controllers/workoutTemplatesController
 const router = Router();
 
 // Creating a template
-router.post("", createWorkoutTemplate);
+router.post("/", createWorkoutTemplate);
 
 export { router };
