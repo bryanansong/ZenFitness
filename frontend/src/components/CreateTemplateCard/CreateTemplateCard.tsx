@@ -1,15 +1,21 @@
 import WorkoutTemplateModal from "../WorkoutTemplateModal/WorkoutTemplateModal";
 import styles from "./CreateTemplateCard.module.css";
-import { useState } from "react";
+import React, { useState } from "react";
 
-const CreateTemplateCard = () => {
+type CreateTemplateCardProps = {
+  fetchTemplates: () => void;
+};
+
+const CreateTemplateCard: React.FC<CreateTemplateCardProps> = ({
+  fetchTemplates,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleClick = () => {
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
-    console.log("Closing modal", "open? ", isModalOpen);
+    fetchTemplates();
     setIsModalOpen(false);
   };
 
