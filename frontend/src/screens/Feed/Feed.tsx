@@ -19,12 +19,12 @@ const Feed = () => {
         }
       );
       if (!response.ok) {
-        throw new Error("Failed to fetch workout templates");
+        throw new Error("Failed to fetch feed");
       }
       const data = await response.json();
       setPostList(data);
     } catch (err: any) {
-      alert(err.message);
+      console.error(err.message);
     }
   };
 
