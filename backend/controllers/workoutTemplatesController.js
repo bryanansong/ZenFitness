@@ -75,6 +75,49 @@ const getWorkoutTemplates = async (req, res) => {
   }
 };
 
+const getWorkoutTemplateInfo = async (req, res) => {
+  try {
+    const { templateId } = req.params;
+
+    if (!templateId) {
+      console.error("Template ID is missing in the query params");
+      return res.status(400).json({ error: "Template ID is required" });
+    }
+
+    const parsedTemplateId = parseInt(templateId);
+    if (isNaN(parsedTemplateId)) {
+      console.error("Invalid Template ID format");
+      return res.status(400).json({ error: "Invalid Template ID format" });
+    }
+
+    const workoutTemplate = await prisma.workoutTemplate.findUnique({
+      where: {
+        id: parsedTemplateId,
+      },
+      include: {
+        exercises: {
+          include: {
+            exercise: true,
+          },
+        },
+      },
+    });
+
+    if (!workoutTemplate) {
+      console.error(`No workout template found with ID: ${templateId}`);
+      return res.status(404).json({ error: "Workout template not found" });
+    }
+
+    res.json(workoutTemplate);
+  } catch (error) {
+    console.error("Error fetching workout template information:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching the workout template" });
+  }
+};
+
+
 const getFeed = async (req, res) => {
   try {
     const workoutTemplates = await prisma.workoutTemplate.findMany({
@@ -99,4 +142,9 @@ const getFeed = async (req, res) => {
   }
 };
 
-export { createWorkoutTemplate, getWorkoutTemplates, getFeed };
+export {
+  createWorkoutTemplate,
+  getWorkoutTemplates,
+  getFeed,
+  getWorkoutTemplateInfo,
+};
