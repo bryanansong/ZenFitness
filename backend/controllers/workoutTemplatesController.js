@@ -75,4 +75,28 @@ const getWorkoutTemplates = async (req, res) => {
   }
 };
 
-export { createWorkoutTemplate, getWorkoutTemplates };
+const getFeed = async (req, res) => {
+  try {
+    const workoutTemplates = await prisma.workoutTemplate.findMany({
+      where: {
+        isPublic: true,
+      },
+      include: {
+        exercises: {
+          include: {
+            exercise: true,
+          },
+        },
+        user: true,
+      },
+    });
+
+    res.json(workoutTemplates);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching your feed" + error });
+  }
+};
+
+export { createWorkoutTemplate, getWorkoutTemplates, getFeed };
