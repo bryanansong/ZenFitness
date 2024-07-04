@@ -3,10 +3,9 @@ import { prisma } from "../utils/helpers.js";
 const createWorkoutTemplate = async (req, res) => {
   console.log("We got to the controller!!!");
   const { name, exercises } = req.body;
-  const userId = req.userId; // Assuming you have authentication middleware that adds user to req
+  const userId = req.userId;
 
   try {
-    // Input validation
     if (!name || !Array.isArray(exercises) || exercises.length === 0) {
       return res.status(400).json({
         error:
@@ -14,7 +13,6 @@ const createWorkoutTemplate = async (req, res) => {
       });
     }
 
-    // Create the workout template
     const workoutTemplate = await prisma.workoutTemplate.create({
       data: {
         name,
