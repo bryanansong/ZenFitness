@@ -39,6 +39,36 @@
   font-size: 1rem;
 }
 
+.radioSection {
+  display: flex;
+  margin-bottom: 20px;
+  gap: 50px;
+}
+
+.label {
+  font-weight: 400;
+}
+
+.optionsContainer {
+  display: flex;
+  gap: 25px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.radioInput {
+  margin: 0;
+}
+
+.selectedValue {
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
 .searchContainer {
   position: relative;
   display: flex;
