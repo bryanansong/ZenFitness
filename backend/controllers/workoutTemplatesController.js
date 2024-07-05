@@ -1,7 +1,7 @@
 import { prisma } from "../utils/helpers.js";
 
 const createWorkoutTemplate = async (req, res) => {
-  const { name, exercises } = req.body;
+  const { name, exercises, isPublic } = req.body;
   const userId = req.userId;
 
   try {
@@ -16,6 +16,7 @@ const createWorkoutTemplate = async (req, res) => {
       data: {
         name,
         userId,
+        isPublic,
         exercises: {
           create: await Promise.all(
             exercises.map(async (exercise) => ({
