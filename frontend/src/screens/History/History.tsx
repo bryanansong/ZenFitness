@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../../components/Header/Header";
 import SessionHistory from "../../components/SessionHistory/SessionHistory";
 import styles from "./History.module.css";
@@ -9,6 +9,32 @@ const History = () => {
   const [favoriteExercise, setFavoriteExercise] = useState("...");
   const [streak, setStreak] = useState(0);
   const [pastSessions, setPastSessions] = useState<WorkoutSession[]>([]);
+
+  const fetchPastSessions = async () => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/workout-sessions`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch workout templates");
+      }
+      const data = await response.json();
+      setPastSessions(data);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchPastSessions();
+  }, []);
 
   return (
     <div className={styles.container}>
