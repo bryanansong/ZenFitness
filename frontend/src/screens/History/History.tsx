@@ -84,14 +84,20 @@ const History = () => {
           <div className={styles.overviewSide}>
             <div className={styles.overviewUpper}>
               <div className={`${styles.tile} ${styles.timeTile}`}>
-                <p className={styles.timeTileHours}>{totalTimeWorkingout}</p>
+                <p className={styles.timeTileHours}>
+                  {Math.round(totalTimeWorkingout / 60).toLocaleString()}
+                </p>
                 <p className={styles.timeTileText}>
-                  Total Hours Spent Working Out
+                  {Math.round(totalTimeWorkingout / 60) === 1
+                    ? "Minute"
+                    : "Total mins"}{" "}
+                  spent working out
                 </p>
               </div>
               <div className={styles.tile}>
                 <p className={styles.tileText}>
-                  {favoriteExercise.replaceAll("_", " ")} is your favorite exercise
+                  {favoriteExercise.replaceAll("_", " ")} is your favorite
+                  exercise
                 </p>
               </div>
             </div>
@@ -103,12 +109,12 @@ const History = () => {
                 {streak}
               </div>
               <div className={`${styles.streakTile} ${styles.streakRight}`}>
-                days in a row!
+                day{streak === 1 ? "" : "s"} in a row!
               </div>
             </div>
           </div>
         </div>
-        <p className={styles.pageTitle}>Past Sessions</p>
+        <p className={styles.pageTitle}>Past workout sessions</p>
         <div className={styles.pastSessions}>
           {pastSessions.map((session, index) => (
             <div key={index}>
