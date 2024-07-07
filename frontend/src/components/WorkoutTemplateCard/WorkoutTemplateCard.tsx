@@ -7,12 +7,8 @@ type WorkoutTemplateCardProps = {
 const WorkoutTemplateCard: React.FC<WorkoutTemplateCardProps> = ({
   template,
 }) => {
-  const handleClick = () => {
-    console.log("Opened A New Workout Session");
-  };
-
   return (
-    <div className={styles.container} onClick={handleClick}>
+    <div className={styles.container}>
       <p className={styles.cardTitle}>{template.name}</p>
       <div className={styles.exerciseList}>
         {template.exercises.map((workoutTemplateExercise, index) => (

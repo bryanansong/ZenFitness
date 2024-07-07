@@ -1,6 +1,6 @@
 .container {
   width: 425px;
-  min-height: 200px;
+  min-height: 250px;
   padding: 10px;
   border-radius: var(--card-radius);
   background-color: var(--primary);
@@ -42,8 +42,23 @@
   font-size: 16px;
   font-weight: 300;
   border-bottom: 1px solid rgba(128, 128, 128, 0.3);
-
-  /* background-color: purple; */
   display: flex;
-  justify-content: space-between;
+}
+
+.exerciseWeight,
+.exerciseReps {
+  display: flex;
+  flex: 2;
+  justify-content: center;
+  text-wrap: balance;
+}
+.exerciseName {
+  display: flex;
+  flex: 4;
+  justify-content: flex-start;
+  text-align: left;
+}
+.divider {
+  margin: 0;
+  border: 0.5px solid var(--secondary);
 }
