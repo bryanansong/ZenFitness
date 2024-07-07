@@ -47,7 +47,7 @@ const SessionHistory: React.FC<SessionHistoryProps> = ({ session }) => {
         </span>
       </p>
       <div className={styles.exerciseList}>
-        {session?.setRecords.map((set, index) => (
+        {session?.workoutSets.map((set, index) => (
           <div key={index}>
             <p className={styles.exerciseItem}>
               <span>{set.exercise.name}</span>

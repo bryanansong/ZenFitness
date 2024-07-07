@@ -10,17 +10,17 @@ const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
   onClose,
   template,
 }) => {
-  const [workoutSets, setWorkoutSets] = useState<Partial<SetRecord>[]>([]);
+  const [workoutSets, setWorkoutSets] = useState<Partial<WorkoutSet>[]>([]);
   const [duration, setDuration] = useState<number>(0);
   const [completionStatus, setCompletionStatus] = useState<
     "COMPLETED" | "PARTIAL"
   >("COMPLETED");
 
-  const addSetRecord = (exerciseId: number) => {
+  const addWorkoutSet = (exerciseId: number) => {
     setWorkoutSets([...workoutSets, { exerciseId, reps: 0, weight: 0 }]);
   };
 
-  const updateSetRecord = (
+  const updateWorkoutSet = (
     index: number,
     field: "reps" | "weight",
     value: number
@@ -40,7 +40,7 @@ const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
       date: new Date(),
       duration: duration && duration * 60, // In seconds
       completionStatus: completionStatus,
-      setRecords: workoutSets as SetRecord[],
+      workoutSets: workoutSets as WorkoutSet[],
     };
     console.log("Set Session", newWorkoutSession);
 
@@ -92,7 +92,7 @@ const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
                         required
                         value={set.weight !== 0 ? set.weight : ""}
                         onChange={(e) =>
-                          updateSetRecord(
+                          updateWorkoutSet(
                             originalIndex,
                             "weight",
                             Number(e.target.value)
@@ -108,7 +108,7 @@ const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
                         required
                         value={set.reps !== 0 ? set.reps : ""}
                         onChange={(e) =>
-                          updateSetRecord(
+                          updateWorkoutSet(
                             originalIndex,
                             "reps",
                             Number(e.target.value)
@@ -128,7 +128,7 @@ const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
                 ))}
 
               <button
-                onClick={() => addSetRecord(exercise.id)}
+                onClick={() => addWorkoutSet(exercise.id)}
                 className={styles.addButton}
               >
                 Add Set
