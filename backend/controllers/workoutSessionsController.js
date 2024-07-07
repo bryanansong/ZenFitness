@@ -83,7 +83,6 @@ const getWorkoutSessions = async (req, res) => {
     });
 
     if (workoutSessions) {
-      console.log("Retrieved all past sessions");
       res.status(200).send(workoutSessions);
     }
   } catch (error) {

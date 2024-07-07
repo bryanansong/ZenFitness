@@ -42,7 +42,6 @@ const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
       completionStatus: completionStatus,
       workoutSets: workoutSets as WorkoutSet[],
     };
-    console.log("Set Session", newWorkoutSession);
 
     try {
       const response = await fetch(
@@ -61,9 +60,6 @@ const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
         const errorData = await response.json();
         throw new Error(errorData.error || "Failed to create workout session");
       }
-
-      const createdSession = await response.json();
-      console.log("Created session:", createdSession);
       onClose();
     } catch (error) {
       console.error("Error creating workout session:", error);
