@@ -51,11 +51,13 @@ const SessionHistory: React.FC<SessionHistoryProps> = ({ session }) => {
         {session?.workoutSets.map((set, index) => (
           <div key={index}>
             <p className={styles.exerciseItem}>
-              <span>{set.exercise.name.replaceAll("_", " ")}</span>
-              <span> |</span>
-              <span> {set.weight}lbs</span>
-              <span> |</span>
-              <span> {set.reps} reps</span>
+              <span className={styles.exerciseName}>
+                {set.exercise.name.replaceAll("_", " ")}
+              </span>
+              <hr className={styles.divider} />
+              <span className={styles.exerciseWeight}> {set.weight}lbs</span>
+              <hr className={styles.divider} />
+              <span className={styles.exerciseReps}> {set.reps} reps</span>
             </p>
           </div>
         ))}
