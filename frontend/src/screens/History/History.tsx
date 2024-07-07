@@ -23,7 +23,7 @@ const History = () => {
         }
       );
       if (!response.ok) {
-        throw new Error("Failed to fetch workout templates");
+        throw new Error("Failed to fetch workout sessions");
       }
       const data = await response.json();
       setPastSessions(data);
