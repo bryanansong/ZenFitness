@@ -8,20 +8,22 @@
   border-radius: var(--card-radius);
   background-color: var(--primary);
   cursor: pointer;
-  border: 5px solid rgb(255, 255, 255, 0.2);
+  border: 3px solid rgb(255, 255, 255, 0.2);
   transition: border 1s ease;
   user-select: none;
 }
 
 .container:hover {
-  border: 5px solid rgb(130, 129, 128);
+  border: 3px solid rgb(130, 129, 128);
   transition: border 0.3s ease;
 }
 
 .cardTitle {
   margin: 0px;
   font-weight: 300;
-  font-size: 54px;
+  font-size: 50px;
   text-align: center;
   letter-spacing: 2px;
+  padding: 0px 10px;
+  line-height: 50px;
 }

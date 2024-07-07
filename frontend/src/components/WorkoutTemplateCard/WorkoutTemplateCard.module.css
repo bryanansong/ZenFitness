@@ -16,7 +16,7 @@
 
 .cardTitle {
   margin: 0px;
-  font-weight: 300;
+  font-weight: 400;
   letter-spacing: 2px;
   font-size: 28px;
 }
@@ -24,7 +24,7 @@
 .exerciseItem {
   margin: 0px;
   margin-top: 5px;
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 300;
   border-bottom: 1px solid rgba(128, 128, 128, 0.3);
 }
