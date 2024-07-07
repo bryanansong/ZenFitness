@@ -56,7 +56,7 @@ model Exercise {
   id                       Int                       @id @default(autoincrement())
   name                     String                    @unique
   workoutTemplateExercises WorkoutTemplateExercise[]
-  SetRecord                SetRecord[]
+  WorkoutSet                WorkoutSet[]
 }
 
 model WorkoutSession {
@@ -68,11 +68,11 @@ model WorkoutSession {
   completionStatus  CompletionStatus
   user              User             @relation(fields: [userId], references: [id])
   workoutTemplate   WorkoutTemplate  @relation(fields: [workoutTemplateId], references: [id])
-  setRecords        SetRecord[]
+  workoutSets        WorkoutSet[]
   createdAt         DateTime         @default(now())
 }
 
-model SetRecord {
+model WorkoutSet {
   id               Int            @id @default(autoincrement())
   workoutSessionId Int
   exerciseId       Int

@@ -46,7 +46,7 @@ declare global {
     id: number;
     name: string;
     workoutTemplateExercises: WorkoutTemplateExercise[];
-    setRecords: SetRecord[];
+    workoutSets: WorkoutSet[];
   };
 
   type WorkoutSession = {
@@ -58,11 +58,11 @@ declare global {
     completionStatus: "COMPLETED" | "PARTIAL";
     user: User;
     workoutTemplate: WorkoutTemplate;
-    setRecords: SetRecord[];
+    workoutSets: WorkoutSet[];
     createdAt: Date;
   };
 
-  type SetRecord = {
+  type WorkoutSet = {
     id: number;
     workoutSessionId: number;
     exerciseId: number;

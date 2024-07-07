@@ -1,15 +1,15 @@
 import { prisma } from "../utils/helpers.js";
 
 const createWorkoutSession = async (req, res) => {
-  const { workoutTemplateId, date, duration, completionStatus, setRecords } =
+  const { workoutTemplateId, date, duration, completionStatus, workoutSets } =
     req.body;
   const userId = req.userId;
 
   try {
-    if (!duration || !completionStatus || setRecords.length === 0) {
+    if (!duration || !completionStatus || workoutSets.length === 0) {
       return res.status(400).json({
         error:
-          "Invalid input. All fields are required and setRecords must not be empty.",
+          "Invalid input. All fields are required and workoutSets must not be empty.",
       });
     }
 
@@ -33,16 +33,16 @@ const createWorkoutSession = async (req, res) => {
         date: new Date(date),
         duration,
         completionStatus,
-        setRecords: {
-          create: setRecords.map((record) => ({
-            exerciseId: record.exerciseId,
-            reps: record.reps,
-            weight: record.weight,
+        workoutSets: {
+          create: workoutSets.map((set) => ({
+            exerciseId: set.exerciseId,
+            reps: set.reps,
+            weight: set.weight,
           })),
         },
       },
       include: {
-        setRecords: {
+        workoutSets: {
           include: {
             exercise: true,
           },
