@@ -37,12 +37,13 @@ const SessionHistory: React.FC<SessionHistoryProps> = ({ session }) => {
 
     return `${day}, ${dateNum}${suffix} ${month}`;
   };
+
   return (
     <div className={styles.container}>
       <p className={styles.cardTitle}>
         {session.workoutTemplate.name}
         <span className={styles.dateAndDuration}>
-          <span>{formatDate(session.date)}</span>
+          <span>{formatDate(new Date(session.date))}</span>
           <span>{`${Math.round(session.duration / 60)} mins`}</span>
         </span>
       </p>
@@ -50,7 +51,7 @@ const SessionHistory: React.FC<SessionHistoryProps> = ({ session }) => {
         {session?.workoutSets.map((set, index) => (
           <div key={index}>
             <p className={styles.exerciseItem}>
-              <span>{set.exercise.name}</span>
+              <span>{set.exercise.name.replaceAll("_", " ")}</span>
               <span> |</span>
               <span> {set.weight}lbs</span>
               <span> |</span>
