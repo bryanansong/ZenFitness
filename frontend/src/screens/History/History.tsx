@@ -10,6 +10,37 @@ const History = () => {
   const [streak, setStreak] = useState(0);
   const [pastSessions, setPastSessions] = useState<WorkoutSession[]>([]);
 
+  const fetchWorkoutStatistics = async () => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/workout-statistics`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.error || "Failed to fetch workout statistics"
+        );
+      }
+
+      const stats = await response.json();
+      setTotalTimeWorkingout(stats.totalTimeWorkingout);
+      setTotalWorkouts(stats.totalWorkouts);
+      setFavoriteExercise(stats.favoriteExercise);
+      setStreak(stats.streak);
+    } catch (error) {
+      console.error("Error fetching workout statistics:", error);
+      throw error;
+    }
+  };
+
   const fetchPastSessions = async () => {
     try {
       const response = await fetch(
@@ -33,6 +64,7 @@ const History = () => {
   };
 
   useEffect(() => {
+    fetchWorkoutStatistics();
     fetchPastSessions();
   }, []);
 
@@ -59,7 +91,7 @@ const History = () => {
               </div>
               <div className={styles.tile}>
                 <p className={styles.tileText}>
-                  {favoriteExercise} is your favorite exercise
+                  {favoriteExercise.replaceAll("_", " ")} is your favorite exercise
                 </p>
               </div>
             </div>
