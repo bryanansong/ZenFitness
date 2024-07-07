@@ -11,16 +11,13 @@ const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
   template,
 }) => {
   const [workoutSets, setWorkoutSets] = useState<Partial<SetRecord>[]>([]);
-  const [duration, setDuration] = useState<number | undefined>();
+  const [duration, setDuration] = useState<number>(0);
   const [completionStatus, setCompletionStatus] = useState<
     "COMPLETED" | "PARTIAL"
   >("COMPLETED");
 
   const addSetRecord = (exerciseId: number) => {
-    setWorkoutSets([
-      ...workoutSets,
-      { exerciseId, reps: undefined, weight: undefined },
-    ]);
+    setWorkoutSets([...workoutSets, { exerciseId, reps: 0, weight: 0 }]);
   };
 
   const updateSetRecord = (
@@ -93,7 +90,7 @@ const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
                       <input
                         type="number"
                         required
-                        value={set.weight}
+                        value={set.weight !== 0 ? set.weight : ""}
                         onChange={(e) =>
                           updateSetRecord(
                             originalIndex,
@@ -109,7 +106,7 @@ const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
                       <input
                         type="number"
                         required
-                        value={set.reps}
+                        value={set.reps !== 0 ? set.reps : ""}
                         onChange={(e) =>
                           updateSetRecord(
                             originalIndex,
@@ -146,7 +143,7 @@ const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
                 id="duration"
                 type="number"
                 required
-                value={duration}
+                value={duration !== 0 ? duration : ""}
                 onChange={(e) => setDuration(Number(e.target.value))}
                 className={styles.input}
               />
