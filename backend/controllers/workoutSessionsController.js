@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "../utils/helpers.js";
 
 const createWorkoutSession = async (req, res) => {
@@ -60,4 +61,46 @@ const createWorkoutSession = async (req, res) => {
   }
 };
 
-export { createWorkoutSession };
+const getWorkoutSessions = async (req, res) => {
+  const userId = req.userId;
+
+  try {
+    const workoutSessions = await prisma.workoutSession.findMany({
+      where: {
+        userId: userId,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        workoutTemplate: true,
+        workoutSets: {
+          include: {
+            exercise: true,
+          },
+        },
+      },
+    });
+
+    if (workoutSessions) {
+      console.log("Retrieved all past sessions");
+      res.status(200).send(workoutSessions);
+    }
+  } catch (error) {
+    console.error("Error retrieving workout sessions:", error);
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2025") {
+        return res.status(404).json({
+          error: "User not found.",
+        });
+      }
+    }
+
+    res.status(500).json({
+      error: "An error occurred while retrieving workout sessions.",
+    });
+  }
+};
+
+export { createWorkoutSession, getWorkoutSessions };
