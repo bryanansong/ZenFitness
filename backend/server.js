@@ -4,6 +4,7 @@ import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
 import { authenticateToken } from "./middleware/authMiddleware.js";
 import { router as workoutTemplateRoutes } from "./routes/workoutTemplatesRoutes.js";
+import { router as workoutSessionRoutes } from "./routes/workoutSessionsRoutes.js";
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -18,6 +19,7 @@ app.use("", authenticateToken);
 
 // Protected Routes
 app.use("/workout-templates", workoutTemplateRoutes);
+app.use("/workout-sessions", workoutSessionRoutes);
 
 // START SERVER
 app.listen(PORT, () => {

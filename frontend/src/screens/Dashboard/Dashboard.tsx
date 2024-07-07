@@ -3,9 +3,19 @@ import styles from "../Dashboard/Dashboard.module.css";
 import WorkoutTemplateCard from "../../components/WorkoutTemplateCard/WorkoutTemplateCard";
 import Header from "../../components/Header/Header";
 import CreateTemplateCard from "../../components/CreateTemplateCard/CreateTemplateCard";
+import WorkoutSessionModal from "../../components/WorkoutSessionModal/WorkoutSessionModal";
 
 const Dashboard = () => {
   const [templateList, setTemplateList] = useState<WorkoutTemplate[]>([]);
+
+  const [isWorkoutSessionOpen, setIsWorkoutSessionOpen] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] =
+    useState<WorkoutTemplate | null>(null);
+
+  const handleTemplateClick = (template: WorkoutTemplate) => {
+    setSelectedTemplate(template);
+    setIsWorkoutSessionOpen(true);
+  };
 
   const fetchTemplates = async () => {
     try {
@@ -25,7 +35,7 @@ const Dashboard = () => {
       const data = await response.json();
       setTemplateList(data);
     } catch (err: any) {
-      alert(err.message);
+      console.error(err.message);
     }
   };
 
@@ -35,12 +45,23 @@ const Dashboard = () => {
 
   return (
     <div className={styles.dashboardContainer}>
+      {selectedTemplate && isWorkoutSessionOpen ? (
+        <WorkoutSessionModal
+          onClose={() => setIsWorkoutSessionOpen(false)}
+          template={selectedTemplate}
+        />
+      ) : <></>}
       <Header />
       <div className={styles.dashboardContent}>
         <p className={styles.pageTitle}>Dashboard</p>
         <div className={styles.templateList}>
           {templateList.map((template, index) => (
-            <div key={index}>
+            <div
+              key={index}
+              onClick={() => {
+                handleTemplateClick(template);
+              }}
+            >
               <WorkoutTemplateCard template={template} />
             </div>
           ))}

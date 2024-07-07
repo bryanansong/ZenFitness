@@ -14,8 +14,8 @@ const CreateTemplateCard: React.FC<CreateTemplateCardProps> = ({
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
-    fetchTemplates();
+  const closeModal = (reloadTemplates = false) => {
+    if (reloadTemplates) fetchTemplates();
     setIsModalOpen(false);
   };
 

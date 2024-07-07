@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styles from "./WorkoutTemplateModal.module.css";
 
 interface WorkoutTemplateModalProps {
-  closeModal: () => void;
+  closeModal: (reloadTemplates?: boolean) => void;
 }
 
 const WorkoutTemplateModal: React.FC<WorkoutTemplateModalProps> = ({
@@ -13,6 +13,7 @@ const WorkoutTemplateModal: React.FC<WorkoutTemplateModalProps> = ({
   const [exercises, setExercises] = useState<string[]>([]);
   const [selectedExercises, setSelectedExercises] = useState<string[]>([]);
   const [filteredExercises, setFilteredExercises] = useState<string[]>([]);
+  const [isPublic, setIsPublic] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchExercises = async () => {
@@ -72,12 +73,13 @@ const WorkoutTemplateModal: React.FC<WorkoutTemplateModalProps> = ({
           body: JSON.stringify({
             name: workoutName,
             exercises: selectedExercises,
+            isPublic,
           }),
         }
       );
 
       if (response.ok) {
-        closeModal();
+        closeModal(true);
       } else {
         throw new Error("Failed to create workout templateeee");
       }
@@ -96,6 +98,11 @@ const WorkoutTemplateModal: React.FC<WorkoutTemplateModalProps> = ({
     closeModal();
   };
 
+  const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value === "true";
+    setIsPublic(value);
+  };
+
   return (
     <div className={styles.modalOverlay} onClick={handleCloseModal}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
@@ -107,6 +114,31 @@ const WorkoutTemplateModal: React.FC<WorkoutTemplateModalProps> = ({
           placeholder="Workout template title"
           className={styles.input}
         />
+        <div className={styles.radioSection}>
+          <label className={styles.label}>Make template Public ?</label>
+          <div className={styles.optionsContainer}>
+            <label className={styles.option}>
+              <input
+                type="radio"
+                value="true"
+                checked={isPublic}
+                onChange={handleOptionChange}
+                className={styles.radioInput}
+              />
+              <span>Yes</span>
+            </label>
+            <label className={styles.option}>
+              <input
+                type="radio"
+                value="false"
+                checked={!isPublic}
+                onChange={handleOptionChange}
+                className={styles.radioInput}
+              />
+              <span>No</span>
+            </label>
+          </div>
+        </div>
         <div className={styles.searchContainer}>
           <input
             type="text"
