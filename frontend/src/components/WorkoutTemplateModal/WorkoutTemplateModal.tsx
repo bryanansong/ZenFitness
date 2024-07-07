@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styles from "./WorkoutTemplateModal.module.css";
 
 interface WorkoutTemplateModalProps {
-  closeModal: () => void;
+  closeModal: (reloadTemplates?: boolean) => void;
 }
 
 const WorkoutTemplateModal: React.FC<WorkoutTemplateModalProps> = ({
@@ -79,7 +79,7 @@ const WorkoutTemplateModal: React.FC<WorkoutTemplateModalProps> = ({
       );
 
       if (response.ok) {
-        closeModal();
+        closeModal(true);
       } else {
         throw new Error("Failed to create workout templateeee");
       }
