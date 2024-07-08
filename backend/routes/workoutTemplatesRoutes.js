@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { createWorkoutTemplate, getFeed, getWorkoutTemplateInfo, getWorkoutTemplates, voteWorkoutTemplate } from "../controllers/workoutTemplatesController.js";
+import { createWorkoutTemplate, getFeed, getWorkoutTemplateInfo, getWorkoutTemplates, vote } from "../controllers/workoutTemplatesController.js";
 
 const router = Router();
 
-router.post("/:templateId/vote", voteWorkoutTemplate);
+router.post("/:templateId/vote", vote);
 router.post("/", createWorkoutTemplate);
 
 router.get("/feed", getFeed);
