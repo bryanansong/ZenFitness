@@ -141,6 +141,7 @@ const getFeed = async (req, res) => {
             exercise: true,
           },
         },
+        votes: true,
         user: {
           include: {
             followers: true,
@@ -158,9 +159,81 @@ const getFeed = async (req, res) => {
   }
 };
 
+const vote = async (req, res) => {
+  const { templateId } = req.params;
+  const { voteType } = req.body;
+  const userId = req.userId;
+
+  try {
+    // Check if the workout template exists
+    const workoutTemplate = await prisma.workoutTemplate.findUnique({
+      where: { id: parseInt(templateId) },
+    });
+
+    if (!workoutTemplate) {
+      return res.status(404).json({ error: "Workout template not found" });
+    }
+
+    // Check if the user has already voted on this template
+    const existingVote = await prisma.vote.findUnique({
+      where: {
+        userId_workoutTemplateId: {
+          userId,
+          workoutTemplateId: parseInt(templateId),
+        },
+      },
+    });
+
+    let updatedVote;
+    if (existingVote) {
+      updatedVote = await prisma.vote.update({
+        where: {
+          id: existingVote.id,
+        },
+        data: {
+          voteType,
+        },
+      });
+    } else {
+      updatedVote = await prisma.vote.create({
+        data: {
+          userId,
+          workoutTemplateId: parseInt(templateId),
+          voteType,
+        },
+      });
+    }
+
+    const updatedTemplate = await prisma.workoutTemplate.findUnique({
+      where: { id: parseInt(templateId) },
+      include: {
+        votes: true,
+        user: {
+          select: {
+            username: true,
+          },
+        },
+        exercises: {
+          include: {
+            exercise: true,
+          },
+        },
+      },
+    });
+
+    res.json(updatedTemplate);
+  } catch (error) {
+    console.error("Error voting on workout template:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while processing your vote" });
+  }
+};
+
 export {
   createWorkoutTemplate,
   getWorkoutTemplates,
   getFeed,
   getWorkoutTemplateInfo,
+  vote,
 };
