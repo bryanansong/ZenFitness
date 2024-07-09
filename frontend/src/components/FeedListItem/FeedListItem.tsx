@@ -178,6 +178,7 @@ const FeedListItem: React.FC<FeedListItemProps> = ({ post }) => {
                 strokeLinejoin="round"
               />
             </svg>
+            <span className={styles.copyCount}>{post.copyCount.toLocaleString()}</span>
           </div>
         </div>
       </div>
