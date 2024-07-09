@@ -23,8 +23,10 @@ const SignUp = () => {
       );
 
       if (response.ok) {
-        const { token } = await response.json();
+        const { token, user } = await response.json();
         localStorage.setItem("token", token);
+        localStorage.setItem("username", user.username);
+        localStorage.setItem("userId", user.userId);
         navigate("/dashboard");
       } else {
         // Handle error
