@@ -27,19 +27,29 @@
   font-weight: 200;
 }
 
-.button {
+.actionButtons {
   display: flex;
-  justify-content: center;
-  padding: 5px 0px;
-  border-radius: var(--card-radius);
-  background-color: var(--secondary);
-  border: 3px transparent solid;
-  user-select: none;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 10px;
+}
+
+.voteButtonGroup {
+  display: flex;
+  gap: 20px;
+}
+
+.upvoteButton, .downvoteButton {
   cursor: pointer;
 }
 
-.button:hover {
-  border: 3px solid white;
+.netVotes {
+  user-select: none;
+  cursor: default;
+}
+
+.copyButton {
+  cursor: pointer;
 }
 
 .divider {
