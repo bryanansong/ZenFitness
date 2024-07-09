@@ -141,6 +141,7 @@ const getFeed = async (req, res) => {
             exercise: true,
           },
         },
+        votes: true,
         user: {
           include: {
             followers: true,
