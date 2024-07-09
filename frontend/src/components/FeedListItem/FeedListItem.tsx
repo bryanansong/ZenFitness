@@ -65,6 +65,30 @@ const FeedListItem: React.FC<FeedListItemProps> = ({ post }) => {
     }
   };
 
+  const handleCopyTemplate = async () => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/workout-templates/${post.id}/copy`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to copy template");
+      }
+
+      const copiedTemplate: WorkoutTemplate = await response.json();
+      console.log("Template copied successfully:", copiedTemplate);
+    } catch (error) {
+      console.error("Error copying template:", error);
+    }
+  };
+
   useEffect(() => {
     calculateNetVotes();
     checkUserVote();
@@ -135,7 +159,10 @@ const FeedListItem: React.FC<FeedListItemProps> = ({ post }) => {
               )}
             </div>
           </div>
-          <div className={styles.copyButton}>
+          <div
+            className={styles.copyButton}
+            onClick={() => handleCopyTemplate()}
+          >
             <svg
               width="20"
               height="20"
@@ -151,6 +178,7 @@ const FeedListItem: React.FC<FeedListItemProps> = ({ post }) => {
                 strokeLinejoin="round"
               />
             </svg>
+            <span className={styles.copyCount}>{post.copyCount.toLocaleString()}</span>
           </div>
         </div>
       </div>

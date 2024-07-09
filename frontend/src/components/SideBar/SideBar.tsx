@@ -5,8 +5,16 @@ import feedIcon from "../../assets/feedIcon.svg";
 import historyIcon from "../../assets/historyIcon.svg";
 import logoutIcon from "../../assets/logoutIcon.svg";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const SideBar = () => {
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const username = localStorage.getItem("username");
+    setUsername(username ? username : "No name");
+  }, []);
+
   return (
     <div className={styles.sideBar}>
       <div className={styles.profile}>
@@ -14,7 +22,7 @@ const SideBar = () => {
           <img src={profileIcon} alt="" />
         </div>
         <p className={styles.sectionName}>
-          Welcome, <br /> Bryan Ansong
+          Welcome,<br /> {username}
         </p>
       </div>
       <Link to={`/dashboard`}>

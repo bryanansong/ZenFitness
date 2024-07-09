@@ -36,10 +36,11 @@
 
 .voteButtonGroup {
   display: flex;
-  gap: 20px;
+  gap: 10px;
 }
 
-.upvoteButton, .downvoteButton {
+.upvoteButton,
+.downvoteButton {
   cursor: pointer;
 }
 
@@ -49,6 +50,10 @@
 }
 
 .copyButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
   cursor: pointer;
 }
 

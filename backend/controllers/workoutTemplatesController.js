@@ -129,6 +129,56 @@ const getWorkoutTemplateInfo = async (req, res) => {
   }
 };
 
+const copyWorkoutTemplate = async (req, res) => {
+  try {
+    const { templateId } = req.params;
+    const userId = req.userId;
+
+    const parsedTemplateId = parseInt(templateId);
+    if (isNaN(parsedTemplateId)) {
+      return res.status(400).json({ error: "Invalid Template ID" });
+    }
+
+    // Find original template
+    const originalTemplate = await prisma.workoutTemplate.findUnique({
+      where: { id: parsedTemplateId },
+      include: { exercises: true },
+    });
+
+    if (!originalTemplate) {
+      return res.status(404).json({ error: "Workout template not found" });
+    }
+
+    // Create copy
+    const copiedTemplate = await prisma.workoutTemplate.create({
+      data: {
+        name: originalTemplate.name,
+        userId: userId,
+        isPublic: false,
+        exercises: {
+          create: originalTemplate.exercises.map((exercise) => ({
+            exerciseId: exercise.exerciseId,
+          })),
+        },
+      },
+      include: { exercises: true },
+    });
+
+    // Increment the copyCount of the original template
+    await prisma.workoutTemplate.update({
+      where: { id: parsedTemplateId },
+      data: { copyCount: { increment: 1 } },
+    });
+
+    res.status(201).json(copiedTemplate);
+  } catch (error) {
+    console.error("Error copying workout template:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while copying the workout template" });
+  }
+};
+
 const getFeed = async (req, res) => {
   try {
     const workoutTemplates = await prisma.workoutTemplate.findMany({
@@ -235,5 +285,6 @@ export {
   getWorkoutTemplates,
   getFeed,
   getWorkoutTemplateInfo,
+  copyWorkoutTemplate,
   vote,
 };
