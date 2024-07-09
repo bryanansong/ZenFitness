@@ -45,7 +45,7 @@ const login = async (req, res) => {
       expiresIn: "1h",
     });
 
-    res.json({ token });
+    res.json({ token, user: { userId: user.id, username: user.username } });
   } catch (error) {
     res.status(400).json({ error: "Unable to log in" });
   }
