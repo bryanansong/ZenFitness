@@ -54,8 +54,20 @@ const FeedListItem: React.FC<FeedListItemProps> = ({ post }) => {
     }
   };
 
+  const checkUserVote = () => {
+    const stringUserId = localStorage.getItem("userId");
+    const currentUserId = parseInt(stringUserId ? stringUserId : "");
+    const userVote = post.votes.find((vote) => vote.userId === currentUserId);
+    if (userVote) {
+      setUpvote(userVote.voteType === "UPVOTE");
+    } else {
+      setUpvote(null);
+    }
+  };
+
   useEffect(() => {
     calculateNetVotes();
+    checkUserVote();
   }, [post]);
 
   return (
