@@ -22,7 +22,8 @@ const SideBar = () => {
           <img src={profileIcon} alt="" />
         </div>
         <p className={styles.sectionName}>
-          Welcome,<br /> {username}
+          Welcome,
+          <br /> {username}
         </p>
       </div>
       <Link to={`/dashboard`}>
@@ -50,7 +51,10 @@ const SideBar = () => {
         </div>
       </Link>
       <Link to={`/`}>
-        <div className={styles.sidebarSection}>
+        <div
+          className={styles.sidebarSection}
+          onClick={() => localStorage.setItem("token", "")}
+        >
           <div className={styles.svg}>
             <img src={logoutIcon} alt="" />
           </div>

@@ -5,7 +5,7 @@ import authRoutes from "./routes/authRoutes.js";
 import { authenticateToken } from "./middleware/authMiddleware.js";
 import { router as workoutTemplateRoutes } from "./routes/workoutTemplatesRoutes.js";
 import { router as workoutSessionRoutes } from "./routes/workoutSessionsRoutes.js";
-import { router as workoutStatistics } from "./routes/workoutStatisticsRoutes.js";
+import { router as userStatistics } from "./routes/userStatisticsRoutes.js";
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -24,7 +24,7 @@ app.use("", authenticateToken);
 // Protected Routes
 app.use("/workout-templates", workoutTemplateRoutes);
 app.use("/workout-sessions", workoutSessionRoutes);
-app.use("/workout-statistics", workoutStatistics);
+app.use("/user-statistics", userStatistics);
 
 // START SERVER
 app.listen(PORT, () => {

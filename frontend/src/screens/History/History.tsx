@@ -13,7 +13,7 @@ const History = () => {
   const fetchWorkoutStatistics = async () => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/workout-statistics`,
+        `${import.meta.env.VITE_BACKEND_URL}/user-statistics`,
         {
           method: "GET",
           headers: {

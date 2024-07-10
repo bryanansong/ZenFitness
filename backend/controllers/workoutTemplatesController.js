@@ -235,7 +235,7 @@ const vote = async (req, res) => {
     });
 
     let updatedVote;
-    if (existingVote) {
+    if (existingVote && existingVote.voteType !== voteType) {
       updatedVote = await prisma.vote.update({
         where: {
           id: existingVote.id,
@@ -244,7 +244,7 @@ const vote = async (req, res) => {
           voteType,
         },
       });
-    } else {
+    } else if (!existingVote) {
       updatedVote = await prisma.vote.create({
         data: {
           userId,
