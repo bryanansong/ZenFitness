@@ -1,6 +1,6 @@
 import { prisma } from "../utils/helpers.js";
 
-const getWorkoutStatistics = async (req, res) => {
+const getUserStatistics = async (req, res) => {
   const userId = req.userId;
 
   try {
@@ -86,4 +86,4 @@ const calculateStreak = (workoutSessions) => {
   return streak;
 };
 
-export { getWorkoutStatistics };
+export { getUserStatistics };
