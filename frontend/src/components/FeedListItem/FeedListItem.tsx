@@ -9,21 +9,31 @@ const FeedListItem: React.FC<FeedListItemProps> = ({ post }) => {
   const [upvote, setUpvote] = useState<boolean | null>(null);
   const [netVotes, setNetVotes] = useState<number>(0);
 
-  const calculateNetVotes = () => {
-    if (!post || !post.votes) {
-      setNetVotes(0);
-      return;
+  const fetchNetVotes = async () => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/template-statistics/net-votes/${
+          post.id
+        }`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch net votes");
+      }
+
+      const { netVotes } = await response.json();
+      setNetVotes(netVotes);
+    } catch (error) {
+      console.error("Error fetching net votes:", error);
+      throw error;
     }
-
-    const upvotes = post.votes.filter(
-      (vote) => vote.voteType === "UPVOTE"
-    ).length;
-    const downvotes = post.votes.filter(
-      (vote) => vote.voteType === "DOWNVOTE"
-    ).length;
-    const netVotes = upvotes - downvotes;
-
-    setNetVotes(netVotes);
   };
 
   const handleVote = async (voteType: "UPVOTE" | "DOWNVOTE") => {
@@ -44,9 +54,7 @@ const FeedListItem: React.FC<FeedListItemProps> = ({ post }) => {
         throw new Error("Failed to update vote");
       }
 
-      const updatedPost = await response.json();
-      post.votes = updatedPost.votes;
-      calculateNetVotes();
+      fetchNetVotes();
 
       setUpvote(voteType === "UPVOTE");
     } catch (error) {
@@ -90,7 +98,7 @@ const FeedListItem: React.FC<FeedListItemProps> = ({ post }) => {
   };
 
   useEffect(() => {
-    calculateNetVotes();
+    fetchNetVotes();
     checkUserVote();
   }, [post]);
 
@@ -178,7 +186,9 @@ const FeedListItem: React.FC<FeedListItemProps> = ({ post }) => {
                 strokeLinejoin="round"
               />
             </svg>
-            <span className={styles.copyCount}>{post.copyCount.toLocaleString()}</span>
+            <span className={styles.copyCount}>
+              {post.copyCount.toLocaleString()}
+            </span>
           </div>
         </div>
       </div>
