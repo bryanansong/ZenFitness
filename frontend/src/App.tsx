@@ -1,20 +1,54 @@
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import SideBar from "./components/SideBar/SideBar";
 import Feed from "./screens/Feed/Feed";
 import History from "./screens/History/History";
 import Dashboard from "./screens/Dashboard/Dashboard";
 import Login from "./screens/auth/Login/Login";
 import SignUp from "./screens/auth/SignUp/SignUp";
-import { Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { jwtDecode } from "jwt-decode";
 
 type ProtectedRouteProps = {
   children: React.ReactNode;
 };
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const token = localStorage.getItem("token");
-  return <>{token ? children : <Navigate to="/login" replace />}</>;
+  const [isTokenValid, setIsTokenValid] = useState<boolean | null>(true);
+
+  useEffect(() => {
+    const checkTokenValidity = () => {
+      const token = localStorage.getItem("token");
+
+      if (token) {
+        try {
+          const decodedToken: any = jwtDecode(token);
+          const currentTime = Date.now() / 1000;
+
+          setIsTokenValid(decodedToken.exp > currentTime);
+        } catch (error) {
+          console.error("Invalid token: ", error);
+          setIsTokenValid(false);
+        }
+      } else {
+        setIsTokenValid(false);
+      }
+    };
+
+    checkTokenValidity();
+
+    const interval = setInterval(checkTokenValidity, 10000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return isTokenValid ? (
+    <div className="app">
+      <SideBar />
+      {children}
+    </div>
+  ) : (
+    <Navigate to="/login" />
+  );
 };
 
 function App() {
@@ -27,10 +61,7 @@ function App() {
           path="/dashboard"
           element={
             <ProtectedRoute>
-              <div className="app">
-                <SideBar />
-                <Dashboard />
-              </div>
+              <Dashboard />
             </ProtectedRoute>
           }
         />
@@ -38,10 +69,7 @@ function App() {
           path="/feed"
           element={
             <ProtectedRoute>
-              <div className="app">
-                <SideBar />
-                <Feed />
-              </div>
+              <Feed />
             </ProtectedRoute>
           }
         />
@@ -49,10 +77,7 @@ function App() {
           path="/history"
           element={
             <ProtectedRoute>
-              <div className="app">
-                <SideBar />
-                <History />
-              </div>
+              <History />
             </ProtectedRoute>
           }
         />
