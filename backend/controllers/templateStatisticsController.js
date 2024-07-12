@@ -26,16 +26,12 @@ const calculateNetVotes = (post) => {
   let netVotes = 0;
 
   if (post && post.votes) {
-    const upvotes = post.votes.filter(
-      (vote) => vote.voteType === "UPVOTE"
-    ).length;
-    const downvotes = post.votes.filter(
-      (vote) => vote.voteType === "DOWNVOTE"
-    ).length;
-    netVotes = upvotes - downvotes;
+    netVotes = post.votes.reduce((net, vote) => {
+      return net + (vote.voteType === "UPVOTE" ? 1 : -1);
+    }, 0);
   }
 
   return netVotes;
 };
 
-export { getNetVotes };
+export { getNetVotes, calculateNetVotes };
