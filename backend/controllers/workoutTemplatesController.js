@@ -181,32 +181,35 @@ const copyWorkoutTemplate = async (req, res) => {
 
 const getFeed = async (req, res) => {
   try {
-    const workoutTemplates = await prisma.workoutTemplate.findMany({
-      where: {
-        isPublic: true,
-      },
-      include: {
-        exercises: {
-          include: {
-            exercise: true,
-          },
-        },
-        votes: true,
-        user: {
-          include: {
-            followers: true,
-            following: true,
-          },
-        },
-      },
-    });
-
+    const workoutTemplates = await getPublicTemplates();
     res.json(workoutTemplates);
   } catch (error) {
     res
       .status(500)
       .json({ error: "An error occurred while fetching your feed" + error });
   }
+};
+
+const getPublicTemplates = async () => {
+  return await prisma.workoutTemplate.findMany({
+    where: {
+      isPublic: true,
+    },
+    include: {
+      exercises: {
+        include: {
+          exercise: true,
+        },
+      },
+      votes: true,
+      user: {
+        include: {
+          followers: true,
+          following: true,
+        },
+      },
+    },
+  });
 };
 
 const vote = async (req, res) => {
@@ -283,8 +286,9 @@ const vote = async (req, res) => {
 export {
   createWorkoutTemplate,
   getWorkoutTemplates,
-  getFeed,
   getWorkoutTemplateInfo,
   copyWorkoutTemplate,
+  getFeed,
+  getPublicTemplates,
   vote,
 };
