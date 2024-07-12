@@ -57,7 +57,7 @@ const WorkoutTemplateModal: React.FC<WorkoutTemplateModalProps> = ({
 
   const handleCreateTemplate = async () => {
     if (!workoutName || selectedExercises.length === 0) {
-      alert("Please provide a workout name and select at least one exercise.");
+      console.error("Please provide a workout name and select at least one exercise.");
       return;
     }
     try {
@@ -84,7 +84,7 @@ const WorkoutTemplateModal: React.FC<WorkoutTemplateModalProps> = ({
         throw new Error("Failed to create workout templateeee");
       }
     } catch (error) {
-      alert("Error creating workout template. Please try again.");
+      console.error("Error creating workout template. Please try again.");
     }
   };
 
