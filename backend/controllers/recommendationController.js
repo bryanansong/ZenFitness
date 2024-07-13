@@ -11,7 +11,7 @@ import { getPublicTemplates } from "./workoutTemplatesController.js";
 
 const templates = await getPublicTemplates();
 
-const fullDayInHours = 24 * 60 * 60 * 1000;
+const fullDayInms = 24 * 60 * 60 * 1000;
 
 const weights = {
   copyCount: 0.6,
@@ -65,9 +65,15 @@ const calculateBaseScore = (template, maxValues) => {
 
   // Boost for new templates
   const newTemplateBoost = 0.1;
-  if (template.createdAt > new Date(Date.now() - fullDayInHours)) {
+  if (template.createdAt > new Date(Date.now() - fullDayInms)) {
     score += newTemplateBoost;
   }
 
   return Math.min(score, 1);
+};
+
+const calculateTimeDecay = (createdAt) => {
+  const templateAgeInDays =
+    (Date.now() - new Date(createdAt).getTime()) / fullDayInms;
+  return 1 / (1 + Math.log(1 + templateAgeInDays));
 };
