@@ -3,17 +3,6 @@ import { calculateNetVotes } from "./templateStatisticsController.js";
 import { getPublicTemplates } from "./workoutTemplatesController.js";
 import { getUserExerciseHistory } from "./userStatistics.js"; // Assume this function exists
 
-/*
-1. Calculate the base score for each template.
-2. Apply the time decay function to account for recency.
-3. Incorporate personalization factors to tailor the recommendations.
-4. Sort the templates based on their final scores and return top results.
-TODO: Set the userId from the http request
-*/
-
-const templates = await getPublicTemplates();
-let userId = 1; // TODO: Replace this with the userId from the req attributes in the http request
-
 const fullDayInms = 24 * 60 * 60 * 1000;
 
 const weights = {
@@ -28,7 +17,7 @@ const normalizeVotes = (votes, maxAbsVotes) =>
   (votes + maxAbsVotes) / (2 * maxAbsVotes);
 
 // Get max values for normalization
-const getMaxValues = async () => {
+const getMaxValues = async (templates) => {
   let maxNetVotes = 0;
   let maxCopyCount = 0;
   let maxFollowerCount = 0;
@@ -81,7 +70,7 @@ const calculateTimeDecay = (createdAt) => {
   return 1 / (1 + Math.log(1 + templateAgeInDays) * 0.2);
 };
 
-const calculatePersonalizationFactor = async (template) => {
+const calculatePersonalizationFactor = async (template, userId) => {
   const user = await prisma.user.findUnique({
     where: { id: userId },
     include: { following: true },
@@ -109,10 +98,32 @@ const calculatePersonalizationFactor = async (template) => {
   return userFollowsFactor * similarityFactor;
 };
 
-const calculateFinalScore = async (template, maxValues) => {
+const calculateFinalScore = async (template, maxValues, userId) => {
   const baseScore = calculateBaseScore(template, maxValues);
   const timeDecay = calculateTimeDecay(template.createdAt);
-  const personalizationFactor = await calculatePersonalizationFactor(template);
-
+  const personalizationFactor = await calculatePersonalizationFactor(
+    template,
+    userId
+  );
   return baseScore * timeDecay * personalizationFactor;
 };
+
+const getRecommendations = async (req, res) => {
+  const userId = req.userId;
+  const templates = await getPublicTemplates();
+  const maxValues = await getMaxValues(templates);
+
+  const scoredTemplates = await Promise.all(
+    templates.map(async (template) => ({
+      ...template,
+      score: await calculateFinalScore(template, maxValues, userId),
+    }))
+  );
+
+  const sortedTemplates = scoredTemplates.sort((a, b) => b.score - a.score);
+
+  res.json(sortedTemplates);
+  return sortedTemplates;
+};
+
+export { getRecommendations };
