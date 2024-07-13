@@ -9,7 +9,10 @@ import { getPublicTemplates } from "./workoutTemplatesController.js";
 4. Sort the templates based on their final scores and return top results.
 */
 
-// Constants
+const templates = await getPublicTemplates();
+
+const fullDayInHours = 24 * 60 * 60 * 1000;
+
 const weights = {
   copyCount: 0.6,
   netVotes: 0.25,
@@ -17,18 +20,12 @@ const weights = {
 };
 
 // Helper methods
-const normalizeValue = (value, max) => {
-  return max > 0 ? value / max : 0;
-};
-
-const normalizeVotes = (netVotes, maxAbsNetVotes) => {
-  return (netVotes + maxAbsNetVotes) / (2 * maxAbsNetVotes);
-};
+const normalizeValue = (value, max) => (max > 0 ? value / max : 0);
+const normalizeVotes = (votes, maxAbsVotes) =>
+  (votes + maxAbsVotes) / (2 * maxAbsVotes);
 
 // Get max values for normalization
 const getMaxValues = async () => {
-  const templates = await getPublicTemplates();
-
   let maxNetVotes = 0;
   let maxCopyCount = 0;
   let maxFollowerCount = 0;
@@ -47,7 +44,7 @@ const getMaxValues = async () => {
 };
 
 // Calculate base score for a workout template
-const calculateBaseScore = async (template, maxValues) => {
+const calculateBaseScore = (template, maxValues) => {
   const netVotes = calculateNetVotes(template.votes);
   const followerCount = template.user.followers.length;
 
@@ -68,7 +65,7 @@ const calculateBaseScore = async (template, maxValues) => {
 
   // Boost for new templates
   const newTemplateBoost = 0.1;
-  if (template.createdAt > new Date(Date.now() - 24 * 60 * 60 * 1000)) {
+  if (template.createdAt > new Date(Date.now() - fullDayInHours)) {
     score += newTemplateBoost;
   }
 
