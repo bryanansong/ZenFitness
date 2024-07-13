@@ -1,15 +1,18 @@
 import { prisma } from "../utils/helpers.js";
 import { calculateNetVotes } from "./templateStatisticsController.js";
 import { getPublicTemplates } from "./workoutTemplatesController.js";
+import { getUserExerciseHistory } from "./userStatistics.js"; // Assume this function exists
 
 /*
 1. Calculate the base score for each template.
 2. Apply the time decay function to account for recency.
 3. Incorporate personalization factors to tailor the recommendations.
 4. Sort the templates based on their final scores and return top results.
+TODO: Set the userId from the http request
 */
 
 const templates = await getPublicTemplates();
+let userId = 1; // TODO: Replace this with the userId from the req attributes in the http request
 
 const fullDayInms = 24 * 60 * 60 * 1000;
 
@@ -75,5 +78,5 @@ const calculateBaseScore = (template, maxValues) => {
 const calculateTimeDecay = (createdAt) => {
   const templateAgeInDays =
     (Date.now() - new Date(createdAt).getTime()) / fullDayInms;
-  return 1 / (1 + Math.log(1 + templateAgeInDays));
+  return 1 / (1 + Math.log(1 + templateAgeInDays) * 0.2);
 };
