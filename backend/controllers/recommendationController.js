@@ -11,6 +11,23 @@ const weights = {
   creatorFollowers: 0.15,
 };
 
+let cachedMaxValues = null;
+let cachedPublicTemplates = null;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+const getMaxValuesWithCache = async () => {
+  if (
+    cachedMaxValues &&
+    Date.now() - cachedMaxValues.timestamp < CACHE_DURATION
+  ) {
+    return cachedMaxValues.values;
+  }
+  const templates = await getPublicTemplates();
+  const maxValues = await getMaxValues(templates);
+  cachedMaxValues = { values: maxValues, timestamp: Date.now() };
+  return maxValues;
+};
+
 // Helper methods
 const normalizeValue = (value, max) => (max > 0 ? value / max : 0);
 const normalizeVotes = (votes, maxAbsVotes) =>
@@ -109,21 +126,26 @@ const calculateFinalScore = async (template, maxValues, userId) => {
 };
 
 const getRecommendations = async (req, res) => {
-  const userId = req.userId;
-  const templates = await getPublicTemplates();
-  const maxValues = await getMaxValues(templates);
+  try {
+    const userId = req.userId;
+    const templates = await getPublicTemplates();
+    const maxValues = await getMaxValues(templates);
 
-  const scoredTemplates = await Promise.all(
-    templates.map(async (template) => ({
-      ...template,
-      score: await calculateFinalScore(template, maxValues, userId),
-    }))
-  );
+    const scoredTemplates = await Promise.all(
+      templates.map(async (template) => ({
+        ...template,
+        score: await calculateFinalScore(template, maxValues, userId),
+      }))
+    );
 
-  const sortedTemplates = scoredTemplates.sort((a, b) => b.score - a.score);
+    const sortedTemplates = scoredTemplates.sort((a, b) => b.score - a.score);
 
-  res.json(sortedTemplates);
-  return sortedTemplates;
+    res.json(sortedTemplates);
+    return sortedTemplates;
+  } catch (error) {
+    console.error("Error generating recommendations:", error);
+    res.status(500).json({ error: "Failed to generate recommendations" });
+  }
 };
 
 export { getRecommendations };
