@@ -80,3 +80,39 @@ const calculateTimeDecay = (createdAt) => {
     (Date.now() - new Date(createdAt).getTime()) / fullDayInms;
   return 1 / (1 + Math.log(1 + templateAgeInDays) * 0.2);
 };
+
+const calculatePersonalizationFactor = async (template) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    include: { following: true },
+  });
+
+  const userExercises = await getUserExerciseHistory(userId);
+
+  // Check if user follows the template creator
+  const userFollowsFactor = user.following.some(
+    (followObject) => followObject.followingId === template.userId
+  )
+    ? 1.2
+    : 1;
+
+  // Calculate exercise similarity
+  const templateExercises = template.exercises.map(
+    (exercise) => exercise.exerciseId
+  );
+  const commonExercises = templateExercises.filter((exercise) =>
+    userExercises.includes(exercise)
+  );
+  const similarityFactor =
+    1 + (commonExercises.length / templateExercises.length) * 0.1;
+
+  return userFollowsFactor * similarityFactor;
+};
+
+const calculateFinalScore = async (template, maxValues) => {
+  const baseScore = calculateBaseScore(template, maxValues);
+  const timeDecay = calculateTimeDecay(template.createdAt);
+  const personalizationFactor = await calculatePersonalizationFactor(template);
+
+  return baseScore * timeDecay * personalizationFactor;
+};
