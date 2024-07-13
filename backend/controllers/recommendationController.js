@@ -1,7 +1,7 @@
 import { prisma } from "../utils/helpers.js";
 import { calculateNetVotes } from "./templateStatisticsController.js";
 import { getPublicTemplates } from "./workoutTemplatesController.js";
-import { getUserExerciseHistory } from "./userStatistics.js"; // Assume this function exists
+import { getUserExerciseHistory } from "./userStatistics.js";
 
 const fullDayInms = 24 * 60 * 60 * 1000;
 
