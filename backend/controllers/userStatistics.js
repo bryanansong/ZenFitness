@@ -86,4 +86,34 @@ const calculateStreak = (workoutSessions) => {
   return streak;
 };
 
-export { getUserStatistics };
+const getUserExerciseHistory = async (userId) => {
+  try {
+    const userSessions = await prisma.workoutSession.findMany({
+      where: {
+        userId: userId,
+      },
+      include: {
+        workoutSets: {
+          include: {
+            exercise: true,
+          },
+        },
+      },
+    });
+
+    // Extract unique exercise IDs from all workout sessions
+    const exerciseIds = new Set();
+    userSessions.forEach((session) => {
+      session.workoutSets.forEach((set) => {
+        exerciseIds.add(set.exercise.id);
+      });
+    });
+
+    return Array.from(exerciseIds);
+  } catch (error) {
+    console.error("Error fetching user exercise history:", error);
+    throw error;
+  }
+};
+
+export { getUserStatistics, getUserExerciseHistory };
