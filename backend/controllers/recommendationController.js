@@ -45,7 +45,7 @@ const getMaxValues = async () => {
 
 // Calculate base score for a workout template
 const calculateBaseScore = (template, maxValues) => {
-  const netVotes = calculateNetVotes(template.votes);
+  const netVotes = calculateNetVotes(template);
   const followerCount = template.user.followers.length;
 
   const normalizedNetVotes = normalizeVotes(netVotes, maxValues.maxNetVotes);
