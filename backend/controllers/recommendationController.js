@@ -1,17 +1,9 @@
 import { prisma } from "../utils/helpers.js";
 import { calculateNetVotes } from "./templateStatisticsController.js";
 import { getPublicTemplates } from "./workoutTemplatesController.js";
+import { getUserExerciseHistory } from "./userStatistics.js";
 
-/*
-1. Calculate the base score for each template.
-2. Apply the time decay function to account for recency.
-3. Incorporate personalization factors to tailor the recommendations.
-4. Sort the templates based on their final scores and return top results.
-*/
-
-const templates = await getPublicTemplates();
-
-const fullDayInHours = 24 * 60 * 60 * 1000;
+const fullDayInms = 24 * 60 * 60 * 1000;
 
 const weights = {
   copyCount: 0.6,
@@ -25,7 +17,7 @@ const normalizeVotes = (votes, maxAbsVotes) =>
   (votes + maxAbsVotes) / (2 * maxAbsVotes);
 
 // Get max values for normalization
-const getMaxValues = async () => {
+const getMaxValues = async (templates) => {
   let maxNetVotes = 0;
   let maxCopyCount = 0;
   let maxFollowerCount = 0;
@@ -65,9 +57,73 @@ const calculateBaseScore = (template, maxValues) => {
 
   // Boost for new templates
   const newTemplateBoost = 0.1;
-  if (template.createdAt > new Date(Date.now() - fullDayInHours)) {
+  if (template.createdAt > new Date(Date.now() - fullDayInms)) {
     score += newTemplateBoost;
   }
 
   return Math.min(score, 1);
 };
+
+const calculateTimeDecay = (createdAt) => {
+  const templateAgeInDays =
+    (Date.now() - new Date(createdAt).getTime()) / fullDayInms;
+  return 1 / (1 + Math.log(1 + templateAgeInDays) * 0.2);
+};
+
+const calculatePersonalizationFactor = async (template, userId) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    include: { following: true },
+  });
+
+  const userExercises = await getUserExerciseHistory(userId);
+
+  // Check if user follows the template creator
+  const userFollowsFactor = user.following.some(
+    (followObject) => followObject.followingId === template.userId
+  )
+    ? 1.2
+    : 1;
+
+  // Calculate exercise similarity
+  const templateExercises = template.exercises.map(
+    (exercise) => exercise.exerciseId
+  );
+  const commonExercises = templateExercises.filter((exercise) =>
+    userExercises.includes(exercise)
+  );
+  const similarityFactor =
+    1 + (commonExercises.length / templateExercises.length) * 0.1;
+
+  return userFollowsFactor * similarityFactor;
+};
+
+const calculateFinalScore = async (template, maxValues, userId) => {
+  const baseScore = calculateBaseScore(template, maxValues);
+  const timeDecay = calculateTimeDecay(template.createdAt);
+  const personalizationFactor = await calculatePersonalizationFactor(
+    template,
+    userId
+  );
+  return baseScore * timeDecay * personalizationFactor;
+};
+
+const getRecommendations = async (req, res) => {
+  const userId = req.userId;
+  const templates = await getPublicTemplates();
+  const maxValues = await getMaxValues(templates);
+
+  const scoredTemplates = await Promise.all(
+    templates.map(async (template) => ({
+      ...template,
+      score: await calculateFinalScore(template, maxValues, userId),
+    }))
+  );
+
+  const sortedTemplates = scoredTemplates.sort((a, b) => b.score - a.score);
+
+  res.json(sortedTemplates);
+  return sortedTemplates;
+};
+
+export { getRecommendations };
