@@ -6,9 +6,9 @@ import { getUserExerciseHistory } from "./userStatistics.js";
 const fullDayInms = 24 * 60 * 60 * 1000;
 
 const weights = {
-  copyCount: 0.6,
-  netVotes: 0.25,
-  creatorFollowers: 0.15,
+  copyCount: 0.5,
+  netVotes: 0.3,
+  creatorFollowers: 0.2,
 };
 
 let cachedMaxValues = null;
