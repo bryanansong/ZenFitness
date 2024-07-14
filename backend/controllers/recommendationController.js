@@ -6,9 +6,26 @@ import { getUserExerciseHistory } from "./userStatistics.js";
 const fullDayInms = 24 * 60 * 60 * 1000;
 
 const weights = {
-  copyCount: 0.6,
-  netVotes: 0.25,
-  creatorFollowers: 0.15,
+  copyCount: 0.5,
+  netVotes: 0.3,
+  creatorFollowers: 0.2,
+};
+
+let cachedMaxValues = null;
+let cachedPublicTemplates = null;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+const getMaxValuesWithCache = async () => {
+  if (
+    cachedMaxValues &&
+    Date.now() - cachedMaxValues.timestamp < CACHE_DURATION
+  ) {
+    return cachedMaxValues.values;
+  }
+  const templates = await getPublicTemplates();
+  const maxValues = await getMaxValues(templates);
+  cachedMaxValues = { values: maxValues, timestamp: Date.now() };
+  return maxValues;
 };
 
 // Helper methods
@@ -109,21 +126,52 @@ const calculateFinalScore = async (template, maxValues, userId) => {
 };
 
 const getRecommendations = async (req, res) => {
-  const userId = req.userId;
-  const templates = await getPublicTemplates();
-  const maxValues = await getMaxValues(templates);
+  try {
+    const userId = req.userId;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
 
-  const scoredTemplates = await Promise.all(
-    templates.map(async (template) => ({
-      ...template,
-      score: await calculateFinalScore(template, maxValues, userId),
-    }))
-  );
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
 
-  const sortedTemplates = scoredTemplates.sort((a, b) => b.score - a.score);
+    if (isNaN(page) || isNaN(limit) || page <= 0 || limit <= 0) {
+      return res.status(400).json({ error: "Invalid page or limit value" });
+    }
 
-  res.json(sortedTemplates);
-  return sortedTemplates;
+    const templates = await getPublicTemplates();
+    const maxValues = await getMaxValues(templates);
+
+    const scoredTemplates = await Promise.all(
+      templates.map(async (template) => ({
+        ...template,
+        score: await calculateFinalScore(template, maxValues, userId),
+      }))
+    );
+
+    const sortedTemplates = scoredTemplates.sort((a, b) => b.score - a.score);
+
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+
+    // Check if the startIndex is within the valid range
+    if (startIndex >= sortedTemplates.length) {
+      return res
+        .status(400)
+        .json({ error: "Page number exceeds available templates" });
+    }
+
+    const paginatedTemplates = sortedTemplates.slice(startIndex, endIndex);
+
+    res.json({
+      currentPage: page,
+      totalPages: Math.ceil(sortedTemplates.length / limit),
+      recommendations: paginatedTemplates,
+    });
+  } catch (error) {
+    console.error("Error generating recommendations:", error);
+    res.status(500).json({ error: "Failed to generate recommendations" });
+  }
 };
 
 export { getRecommendations };
