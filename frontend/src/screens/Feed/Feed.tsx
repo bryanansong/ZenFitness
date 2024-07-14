@@ -15,7 +15,7 @@ const Feed = () => {
       const response = await fetch(
         `${
           import.meta.env.VITE_BACKEND_URL
-        }/workout-templates/feed?page=${page}&limit=2`,
+        }/workout-templates/feed?page=${page}&limit=20`,
         {
           method: "GET",
           headers: {
