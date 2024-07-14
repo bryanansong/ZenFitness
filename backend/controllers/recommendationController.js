@@ -3,8 +3,6 @@ import { calculateNetVotes } from "./templateStatisticsController.js";
 import { getPublicTemplates } from "./workoutTemplatesController.js";
 import { getUserExerciseHistory } from "./userStatistics.js";
 
-const fullDayInms = 24 * 60 * 60 * 1000;
-
 const weights = {
   copyCount: 0.5,
   netVotes: 0.3,
@@ -14,15 +12,27 @@ const weights = {
 let cachedMaxValues = null;
 let cachedPublicTemplates = null;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+const fullDayInms = 24 * 60 * 60 * 1000;
 
-const getMaxValuesWithCache = async () => {
+const getPublicTemplatesWithCache = async () => {
+  if (
+    cachedPublicTemplates &&
+    Date.now() - cachedPublicTemplates.timestamp < CACHE_DURATION
+  ) {
+    return cachedPublicTemplates.templates;
+  }
+  const templates = await getPublicTemplates();
+  cachedPublicTemplates = { templates, timestamp: Date.now() };
+  return templates;
+};
+
+const getMaxValuesWithCache = async (templates) => {
   if (
     cachedMaxValues &&
     Date.now() - cachedMaxValues.timestamp < CACHE_DURATION
   ) {
     return cachedMaxValues.values;
   }
-  const templates = await getPublicTemplates();
   const maxValues = await getMaxValues(templates);
   cachedMaxValues = { values: maxValues, timestamp: Date.now() };
   return maxValues;
@@ -139,8 +149,8 @@ const getRecommendations = async (req, res) => {
       return res.status(400).json({ error: "Invalid page or limit value" });
     }
 
-    const templates = await getPublicTemplates();
-    const maxValues = await getMaxValues(templates);
+    const templates = await getPublicTemplatesWithCache();
+    const maxValues = await getMaxValuesWithCache(templates);
 
     const scoredTemplates = await Promise.all(
       templates.map(async (template) => ({
