@@ -128,6 +128,17 @@ const calculateFinalScore = async (template, maxValues, userId) => {
 const getRecommendations = async (req, res) => {
   try {
     const userId = req.userId;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    if (isNaN(page) || isNaN(limit) || page <= 0 || limit <= 0) {
+      return res.status(400).json({ error: "Invalid page or limit value" });
+    }
+
     const templates = await getPublicTemplates();
     const maxValues = await getMaxValues(templates);
 
@@ -140,8 +151,23 @@ const getRecommendations = async (req, res) => {
 
     const sortedTemplates = scoredTemplates.sort((a, b) => b.score - a.score);
 
-    res.json(sortedTemplates);
-    return sortedTemplates;
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+
+    // Check if the startIndex is within the valid range
+    if (startIndex >= sortedTemplates.length) {
+      return res
+        .status(400)
+        .json({ error: "Page number exceeds available templates" });
+    }
+
+    const paginatedTemplates = sortedTemplates.slice(startIndex, endIndex);
+
+    res.json({
+      currentPage: page,
+      totalPages: Math.ceil(sortedTemplates.length / limit),
+      recommendations: paginatedTemplates,
+    });
   } catch (error) {
     console.error("Error generating recommendations:", error);
     res.status(500).json({ error: "Failed to generate recommendations" });
