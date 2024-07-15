@@ -11,13 +11,13 @@ const weights = {
 
 let cachedMaxValues = null;
 let cachedPublicTemplates = null;
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
-const fullDayInms = 24 * 60 * 60 * 1000;
+const cacheDuration = 5 * 60 * 1000; // 5 minutes
+const fullDayInMs = 24 * 60 * 60 * 1000;
 
 const getPublicTemplatesWithCache = async () => {
   if (
     cachedPublicTemplates &&
-    Date.now() - cachedPublicTemplates.timestamp < CACHE_DURATION
+    Date.now() - cachedPublicTemplates.timestamp < cacheDuration
   ) {
     return cachedPublicTemplates.templates;
   }
@@ -29,7 +29,7 @@ const getPublicTemplatesWithCache = async () => {
 const getMaxValuesWithCache = async (templates) => {
   if (
     cachedMaxValues &&
-    Date.now() - cachedMaxValues.timestamp < CACHE_DURATION
+    Date.now() - cachedMaxValues.timestamp < cacheDuration
   ) {
     return cachedMaxValues.values;
   }
@@ -84,7 +84,7 @@ const calculateBaseScore = (template, maxValues) => {
 
   // Boost for new templates
   const newTemplateBoost = 0.1;
-  if (template.createdAt > new Date(Date.now() - fullDayInms)) {
+  if (template.createdAt > new Date(Date.now() - fullDayInMs)) {
     score += newTemplateBoost;
   }
 
@@ -93,7 +93,7 @@ const calculateBaseScore = (template, maxValues) => {
 
 const calculateTimeDecay = (createdAt) => {
   const templateAgeInDays =
-    (Date.now() - new Date(createdAt).getTime()) / fullDayInms;
+    (Date.now() - new Date(createdAt).getTime()) / fullDayInMs;
   return 1 / (1 + Math.log(1 + templateAgeInDays) * 0.2);
 };
 

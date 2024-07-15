@@ -6,7 +6,7 @@ const getUserStatistics = async (req, res) => {
   try {
     // Fetch all workout sessions for the user
     const workoutSessions = await prisma.workoutSession.findMany({
-      where: { userId: userId },
+      where: { userId },
       orderBy: { date: "desc" },
       include: {
         workoutSets: {
