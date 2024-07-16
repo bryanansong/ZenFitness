@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import styles from "./FeedListItem.module.css";
+import { Link } from "react-router-dom";
 
 type FeedListItemProps = {
   post: WorkoutTemplate;
@@ -106,7 +107,9 @@ const FeedListItem: React.FC<FeedListItemProps> = ({ post }) => {
     <div className={styles.container}>
       <div className={styles.overview}>
         <h1 className={styles.templateName}>{post.name}</h1>
-        <p className={styles.templateName}>Created By: {post.user.username}</p>
+        <Link to={`/profile/${post.userId}`}>
+          <p className={styles.usernname}>Created by: {post.user.username}</p>
+        </Link>
         <div className={styles.actionButtons}>
           <div className={styles.voteButtonGroup}>
             <div

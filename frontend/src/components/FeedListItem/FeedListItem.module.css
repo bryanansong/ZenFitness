@@ -27,6 +27,15 @@
   font-weight: 200;
 }
 
+.username {
+  font-weight: 200;
+}
+
+.usernname:hover {
+  cursor: pointer;
+  opacity: 0.7;
+}
+
 .actionButtons {
   display: flex;
   justify-content: space-between;
