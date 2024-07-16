@@ -1,0 +1,125 @@
+.profileContainer {
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px 30px 0px 30px;
+}
+
+.profileHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.username {
+  font-weight: 100;
+  font-size: 5rem;
+  margin: 0;
+  letter-spacing: 5px;
+}
+
+.followButton {
+  padding: 0.5rem 2rem;
+  min-width: 200px;
+  background-color: #666;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.followButton:hover {
+  background-color: #495969;
+}
+
+.followButtonContent {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.followButtonContent > p {
+  font-size: 1.5rem;
+  font-weight: 200;
+  margin: 0px;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 2rem;
+}
+
+.statItem {
+  text-align: center;
+}
+
+.statValue {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.statLabel {
+  font-size: 0.95rem;
+  color: #666;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.templates,
+.history {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--primary);
+  border-radius: 8px;
+  padding: 1rem 3rem;
+  border: var(--border-styling);
+}
+.templates {
+  flex: 3;
+}
+.history {
+  flex: 1;
+}
+
+.sectionTitle {
+  font-weight: 400;
+  font-size: 2rem;
+}
+
+.templatesList {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.historyList {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.templateGrid {
+  gap: 1rem;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-top: 2rem;
+}
+
+@media (max-width: 1280px) {
+  .content {
+    flex-direction: column;
+  }
+}
