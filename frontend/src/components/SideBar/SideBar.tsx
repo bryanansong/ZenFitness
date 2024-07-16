@@ -9,23 +9,28 @@ import { useEffect, useState } from "react";
 
 const SideBar = () => {
   const [username, setUsername] = useState("");
+  const [userId, setUserId] = useState<number>(0);
 
   useEffect(() => {
     const username = localStorage.getItem("username");
+    const userId = localStorage.getItem("userId");
     setUsername(username ? username : "No name");
+    setUserId(userId ? parseInt(userId) : 0);
   }, []);
 
   return (
     <div className={styles.sideBar}>
-      <div className={styles.profile}>
-        <div className={styles.svg}>
-          <img src={profileIcon} alt="" />
+      <Link to={`/profile/${userId}`}>
+        <div className={styles.profile}>
+          <div className={styles.svg}>
+            <img src={profileIcon} alt="" />
+          </div>
+          <p className={styles.sectionName}>
+            Welcome,
+            <br /> {username}
+          </p>
         </div>
-        <p className={styles.sectionName}>
-          Welcome,
-          <br /> {username}
-        </p>
-      </div>
+      </Link>
       <Link to={`/dashboard`}>
         <div className={styles.sidebarSection}>
           <div className={styles.svg}>
