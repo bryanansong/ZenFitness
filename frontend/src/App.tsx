@@ -8,6 +8,7 @@ import Login from "./screens/auth/Login/Login";
 import SignUp from "./screens/auth/SignUp/SignUp";
 import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
+import Profile from "./screens/Profile/Profile";
 
 type ProtectedRouteProps = {
   children: React.ReactNode;
@@ -78,6 +79,14 @@ function App() {
           element={
             <ProtectedRoute>
               <History />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/:userId"
+          element={
+            <ProtectedRoute>
+              <Profile />
             </ProtectedRoute>
           }
         />
