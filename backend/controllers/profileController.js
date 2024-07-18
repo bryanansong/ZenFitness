@@ -125,7 +125,7 @@ const getFollowStatus = async (req, res) => {
       },
     });
 
-    res.json({ isFollowing: follow });
+    res.json({ isFollowing: follow ? true : false });
   } catch (error) {
     console.error("Error checking follow status:", error);
     res.status(500).json({ error: "Failed to check follow status" });
