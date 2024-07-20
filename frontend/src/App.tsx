@@ -9,6 +9,8 @@ import SignUp from "./screens/auth/SignUp/SignUp";
 import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import Profile from "./screens/Profile/Profile";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 type ProtectedRouteProps = {
   children: React.ReactNode;
@@ -44,6 +46,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   return isTokenValid ? (
     <div className="app">
+      <ToastContainer />
       <SideBar />
       {children}
     </div>
@@ -54,6 +57,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
 function App() {
   return (
+    <>
     <BrowserRouter>
       <Routes>
         <Route path="*" element={<Login />} />
@@ -92,6 +96,7 @@ function App() {
         />
       </Routes>
     </BrowserRouter>
+    </>
   );
 }
 
