@@ -1,0 +1,11 @@
+.notificationsScreen {
+  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .notificationsScreen {
+    padding: 1rem;
+  }
+}
