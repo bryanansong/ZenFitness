@@ -7,6 +7,7 @@ import Dashboard from "./screens/Dashboard/Dashboard";
 import Login from "./screens/auth/Login/Login";
 import SignUp from "./screens/auth/SignUp/SignUp";
 import Profile from "./screens/Profile/Profile";
+import Notifications from "./screens/Notifications/Notifications";
 import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import io from "socket.io-client";
@@ -106,6 +107,14 @@ const App = () => {
           element={
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/notifications"
+          element={
+            <ProtectedRoute>
+              <Notifications />
             </ProtectedRoute>
           }
         />
