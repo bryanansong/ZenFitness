@@ -8,6 +8,7 @@ import { router as workoutSessionRoutes } from "./routes/workoutSessionsRoutes.j
 import { router as userStatistics } from "./routes/userStatisticsRoutes.js";
 import { router as templateStatistics } from "./routes/templateStatisticsRoutes.js";
 import { router as profileRoutes } from "./routes/profileRoutes.js";
+import notificationRoutes from  "./routes/notificationRoutes.js";
 import { Server } from "socket.io";
 import { createServer } from "node:http";
 
@@ -33,6 +34,7 @@ app.use("/auth", authRoutes);
 app.use("", authenticateToken);
 
 // Protected Routes
+app.use("/notifications", notificationRoutes);
 app.use("/profile", profileRoutes);
 app.use("/workout-templates", workoutTemplateRoutes);
 app.use("/workout-sessions", workoutSessionRoutes);
