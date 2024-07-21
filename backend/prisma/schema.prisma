@@ -17,6 +17,8 @@ model User {
   following        Follow[]          @relation("UserFollowing")
   followers        Follow[]          @relation("UserFollowers")
   votes            Vote[]
+  notifications    Notification[]
+  userInterests    UserInterest?
 }
 
 model Follow {
@@ -56,7 +58,7 @@ model Exercise {
   id                       Int                       @id @default(autoincrement())
   name                     String                    @unique
   workoutTemplateExercises WorkoutTemplateExercise[]
-  WorkoutSet                WorkoutSet[]
+  workoutSets              WorkoutSet[]
 }
 
 model WorkoutSession {
@@ -68,7 +70,7 @@ model WorkoutSession {
   completionStatus  CompletionStatus
   user              User             @relation(fields: [userId], references: [id])
   workoutTemplate   WorkoutTemplate  @relation(fields: [workoutTemplateId], references: [id])
-  workoutSets        WorkoutSet[]
+  workoutSets       WorkoutSet[]
   createdAt         DateTime         @default(now())
 }
 
@@ -91,6 +93,37 @@ model Vote {
   workoutTemplate   WorkoutTemplate @relation(fields: [workoutTemplateId], references: [id])
 
   @@unique([userId, workoutTemplateId])
+}
+
+model Notification {
+  id                Int      @id @default(autoincrement())
+  userId            Int
+  user              User     @relation(fields: [userId], references: [id])
+  type              String
+  content           String
+  createdAt         DateTime @default(now())
+  deliveredAt       DateTime?
+  status            String   // "unsent", "selected", "sent"
+}
+
+model UserInterest {
+  id               Int                      @id @default(autoincrement())
+  userId           Int                      @unique
+  user             User                     @relation(fields: [userId], references: [id])
+  activityScore    Float
+  lastWorkoutDate  DateTime
+  interests        UserInterestCategory[]
+  updatedAt        DateTime                 @updatedAt
+}
+
+model UserInterestCategory {
+  id              Int                      @id @default(autoincrement())
+  userInterestId  Int
+  userInterest    UserInterest             @relation(fields: [userInterestId], references: [id])
+  category        String
+  score           Float
+
+  @@unique([userInterestId, category])
 }
 
 enum CompletionStatus {
