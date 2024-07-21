@@ -4,6 +4,7 @@ import dashboardIcon from "../../assets/dashboardIcon.svg";
 import feedIcon from "../../assets/feedIcon.svg";
 import historyIcon from "../../assets/historyIcon.svg";
 import logoutIcon from "../../assets/logoutIcon.svg";
+import bellIcon from "../../assets/bellIcon.svg";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
@@ -55,7 +56,15 @@ const SideBar = () => {
           <p className={styles.sectionName}>History</p>
         </div>
       </Link>
-      <Link to={`/`}>
+      <Link to={`/notifications`}>
+        <div className={styles.sidebarSection}>
+          <div className={styles.svg}>
+            <img src={bellIcon} alt="" />
+          </div>
+          <p className={styles.sectionName}>Notifications</p>
+        </div>
+      </Link>
+      <Link to={`/login`}>
         <div
           className={styles.sidebarSection}
           onClick={() => localStorage.setItem("token", "")}

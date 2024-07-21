@@ -1,0 +1,89 @@
+.notificationsContainer {
+  background-color: var(--primary);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.notificationsContainer h2 {
+  font-size: 2rem;
+  font-weight: 300;
+  color: white;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 0.5rem;
+}
+
+.notificationsList {
+  list-style-type: none;
+  padding: 0;
+}
+
+.notificationItem {
+  background-color: var(--secondary);
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  transition: all 0.3s ease;
+}
+
+.notificationItem:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.notificationItem p {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  color: white;
+}
+
+.notificationItem small {
+  display: block;
+  font-size: 0.8rem;
+  color: #777;
+  margin-bottom: 0.5rem;
+}
+
+.notificationItem button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.notificationItem button:hover {
+  background-color: #0056b3;
+}
+
+.notificationItem[data-status="read"] {
+  opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+  .notificationsContainer {
+    padding: 1rem;
+  }
+
+  .notificationsContainer h2 {
+    font-size: 1.5rem;
+  }
+
+  .notificationItem {
+    padding: 0.8rem;
+  }
+
+  .notificationItem p {
+    font-size: 0.9rem;
+  }
+
+  .notificationItem button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+}

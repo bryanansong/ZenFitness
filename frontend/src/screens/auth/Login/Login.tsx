@@ -2,7 +2,11 @@ import styles from "./Login.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-const Login = () => {
+interface LoginProps {
+  setIsAuthenticated: (value: boolean) => void;
+}
+
+const Login: React.FC<LoginProps> = ({ setIsAuthenticated }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -26,6 +30,7 @@ const Login = () => {
         localStorage.setItem("token", token);
         localStorage.setItem("username", user.username);
         localStorage.setItem("userId", user.userId);
+        setIsAuthenticated(true);
         navigate("/dashboard");
       } else {
         // Handle error

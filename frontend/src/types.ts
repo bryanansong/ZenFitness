@@ -80,4 +80,12 @@ declare global {
     user: User;
     workoutTemplate: WorkoutTemplate;
   };
+
+  type NotificationItem = {
+    id: number;
+    type: string;
+    content: string;
+    createdAt: string;
+    status: string;
+  }
 }
