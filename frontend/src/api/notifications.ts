@@ -10,8 +10,8 @@ export const getNotifications = async () => {
           Authorization: `Bearer ${token}`,
         },
       }
-    );
-    return response.json().data;
+    ).then((res) => res.json());
+    return response;
   } catch (error) {
     console.error("Failed to fetch notifications:", error);
     throw error;
@@ -32,8 +32,8 @@ export const markNotificationAsRead = async (notificationId: number) => {
           Authorization: `Bearer ${token}`,
         },
       }
-    );
-    return response.json().data;
+    ).then((res) => res.json());
+    return response;
   } catch (error) {
     console.error("Failed to mark notification as read:", error);
     throw error;
