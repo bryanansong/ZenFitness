@@ -4,6 +4,7 @@ import {
   markNotificationAsRead,
 } from "../../api/notifications";
 import styles from "./NotificationsList.module.css";
+import { toast } from "react-toastify";
 
 const NotificationsList: React.FC = () => {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
@@ -23,12 +24,13 @@ const NotificationsList: React.FC = () => {
 
   const handleMarkAsRead = async (notificationId: number) => {
     try {
-      await markNotificationAsRead(notificationId);
+      const res = await markNotificationAsRead(notificationId);
       setNotifications(
         notifications.map((notif) =>
           notif.id === notificationId ? { ...notif, status: "read" } : notif
         )
       );
+      toast(res.message)
     } catch (error) {
       console.error("Failed to mark notification as read:", error);
     }
