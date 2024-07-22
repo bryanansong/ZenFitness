@@ -2,12 +2,10 @@ import { schedule } from "node-cron";
 import { prisma } from "../utils/helpers.js";
 import { generateAllNotifications } from "./notificationGenerator.js";
 import { evaluateDecisionTree } from "./decisionTreeEvaluator.js";
+import { calculateRecentActivityScore } from "./userInterestTracker.js";
 
 const processUserNotifications = async (userId, io) => {
-  const userInterest = await prisma.userInterest.findUnique({
-    where: { userId },
-    include: { interests: true },
-  });
+  const userInterest = await calculateRecentActivityScore(userId);
 
   if (!userInterest) return;
 

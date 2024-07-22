@@ -1,7 +1,7 @@
+import { calculateDaysSinceLastWorkout } from "../utils/helpers.js";
+
 const evaluateDecisionTree = (userInterest, notifications) => {
-  const daysSinceLastWorkout = Math.floor(
-    (Date.now() - userInterest.lastWorkoutDate.getTime()) / (1000 * 3600 * 24)
-  );
+  const daysSinceLastWorkout = calculateDaysSinceLastWorkout(userInterest);
 
   const groupedNotifications = {};
   notifications.forEach((note) => {
@@ -19,7 +19,7 @@ const evaluateDecisionTree = (userInterest, notifications) => {
     return groupedNotifications["motivation"]?.[0];
   }
 
-  if (groupedNotifications["achievement"]) {
+  if (userInterest.activityScore >= 70 && groupedNotifications["achievement"]) {
     return groupedNotifications["achievement"][0];
   }
 
