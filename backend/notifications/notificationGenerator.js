@@ -1,37 +1,39 @@
 import { prisma } from "../utils/helpers.js";
 
-const generateWorkoutReminder = async (userId) => {
+const generateAllNotifications = async (userId) => {
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    include: { userInterests: true },
+    include: {
+      userInterests: { include: { interests: true } },
+      workoutSessions: { orderBy: { date: "desc" }, take: 5 },
+      followers: {
+        orderBy: { createdAt: "desc" },
+        include: { follower: true },
+        take: 1,
+      },
+    },
   });
 
-  if (!user || !user.userInterests) return null;
+  if (!user || !user.userInterests) return [];
 
   const daysSinceLastWorkout = Math.floor(
     (Date.now() - user.userInterests.lastWorkoutDate.getTime()) /
       (1000 * 3600 * 24)
   );
 
+  const notifications = [];
+
   if (daysSinceLastWorkout > 3) {
-    return {
+    notifications.push({
       type: "workout_reminder",
       content: `It's been ${daysSinceLastWorkout} days since your last workout. Time to get moving!`,
-    };
+    });
   }
-  return null;
-};
 
-const generateTemplateRecommendation = async (userId) => {
-  const userInterest = await prisma.userInterest.findUnique({
-    where: { userId },
-    include: { interests: true },
-  });
-
-  if (!userInterest || userInterest.interests.length === 0) return null;
-
-  const highestInterest = userInterest.interests.reduce((max, interest) =>
-    interest.score > max.score ? interest : max
+  // Find the highest interest
+  const highestInterest = user.userInterests.interests.reduce(
+    (max, interest) => (interest.score > max.score ? interest : max),
+    { score: 0, category: "" }
   );
 
   if (highestInterest.score > 70) {
@@ -47,109 +49,67 @@ const generateTemplateRecommendation = async (userId) => {
         },
       },
       include: {
-        user: true
-      }
+        user: {
+          select: { username: true },
+        },
+      },
     });
 
     if (recommendedTemplate) {
-      return {
+      notifications.push({
         type: "template_recommendation",
-        content: `Check out this workout template made by @${recommendedTemplate.user.username}: ${recommendedTemplate.name}`,
-      };
+        content: `Check out this ${highestInterest.category} workout template made by @${recommendedTemplate.user.username}: ${recommendedTemplate.name}`,
+      });
     }
   }
-  return null;
-};
-
-const generateAchievementNotification = async (userId) => {
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    include: { workoutSessions: true },
-  });
-
-  if (!user) return null;
 
   const workoutCount = user.workoutSessions.length;
 
   if (workoutCount % 10 === 0) {
-    return {
+    notifications.push({
       type: "achievement",
       content: `Congratulations! You've completed ${workoutCount.toLocaleString()} workouts. Keep up the great work!`,
-    };
+    });
   }
-  return null;
-};
 
-const generateSocialInteractionNotification = async (userId) => {
-  const recentFollow = await prisma.follow.findFirst({
-    where: { followingId: userId },
-    orderBy: { createdAt: "desc" },
-    include: { follower: true },
-  });
+  const recentFollow = user.followers[0];
+  const daysSinceFollow = Math.floor(
+    (Date.now() - recentFollow.createdAt.getTime()) / (1000 * 3600 * 24)
+  );
 
-  if (recentFollow) {
-    return {
+  if (recentFollow && daysSinceFollow <= 3) {
+    notifications.push({
       type: "social_interaction",
       content: `${recentFollow.follower.username} started following you!`,
-    };
+    });
   }
-  return null;
-};
 
-const generateProgressUpdate = async (userId) => {
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    include: { workoutSessions: { orderBy: { date: "desc" }, take: 5 } },
-  });
+  if (user.workoutSessions.length >= 5) {
+    const averageDuration =
+      user.workoutSessions.reduce((sum, session) => sum + session.duration, 0) /
+      5;
 
-  if (!user || user.workoutSessions.length < 5) return null;
+    notifications.push({
+      type: "progress_update",
+      content: `Great job! Your average workout duration over the last 5 sessions is ${Math.round(
+        averageDuration
+      )} minutes.`,
+    });
+  }
 
-  const averageDuration =
-    user.workoutSessions.reduce((sum, session) => sum + session.duration, 0) /
-    5;
-
-  return {
-    type: "progress_update",
-    content: `Great job! Your average workout duration over the last 5 sessions is ${Math.round(
-      averageDuration
-    )} minutes.`,
-  };
-};
-
-const generateMotivationalMessage = async (userId) => {
-  const userInterest = await prisma.userInterest.findUnique({
-    where: { userId },
-  });
-
-  if (!userInterest) return null;
-
-  if (userInterest.activityScore < 30) {
+  if (user.userInterests.activityScore < 30) {
     const messages = [
       "Every workout brings you closer to your goals. Let's get started!",
       "Small steps lead to big changes. How about a quick workout today?",
       "You've got this! Even a short workout can make a big difference.",
     ];
-    return {
+    notifications.push({
       type: "motivation",
       content: messages[Math.floor(Math.random() * messages.length)],
-    };
+    });
   }
-  return null;
+
+  return notifications;
 };
 
-const generateAllNotifications = async (userId) => {
-  const notifications = [
-    await generateWorkoutReminder(userId),
-    await generateTemplateRecommendation(userId),
-    await generateAchievementNotification(userId),
-    await generateSocialInteractionNotification(userId),
-    await generateProgressUpdate(userId),
-    await generateMotivationalMessage(userId),
-  ];
-
-  return notifications.filter((n) => n !== null);
-}
-
-export {
-  generateAllNotifications,
-};
+export { generateAllNotifications };
