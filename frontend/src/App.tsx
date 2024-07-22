@@ -21,7 +21,6 @@ type ProtectedRouteProps = {
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
-  const socket = io(import.meta.env.VITE_BACKEND_URL);
 
   useEffect(() => {
     const checkTokenValidity = () => {
@@ -43,7 +42,11 @@ const App = () => {
 
   useEffect(() => {
     if (isAuthenticated && userId) {
-      socket.emit("authenticate", userId);
+      const socket = io(import.meta.env.VITE_BACKEND_URL);
+
+      socket.on("connect", () => {
+        socket.emit("authenticate", userId);
+      });
 
       socket.on("notification", (notification) => {
         toast(notification.content, {
@@ -51,11 +54,13 @@ const App = () => {
           position: "top-right",
         });
       });
-    }
 
-    return () => {
-      socket.off("notification");
-    };
+      return () => {
+        socket.off("connect");
+        socket.off("notification");
+        socket.disconnect();
+      };
+    }
   }, [isAuthenticated, userId]);
 
   const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
