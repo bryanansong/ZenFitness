@@ -11,4 +11,10 @@ const comparePassword = async (inputPassword, hashedPassword) => {
   return await bcrypt.compare(inputPassword, hashedPassword);
 };
 
-export { prisma, hashPassword, comparePassword };
+const calculateDaysSinceLastWorkout = (userInterest) => {
+  return Math.floor(
+    (Date.now() - userInterest.lastWorkoutDate.getTime()) / (1000 * 3600 * 24)
+  );
+};
+
+export { prisma, hashPassword, comparePassword, calculateDaysSinceLastWorkout };

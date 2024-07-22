@@ -1,4 +1,4 @@
-import { prisma } from "../utils/helpers.js";
+import { calculateDaysSinceLastWorkout, prisma } from "../utils/helpers.js";
 
 const generateAllNotifications = async (userId) => {
   const user = await prisma.user.findUnique({
@@ -16,9 +16,8 @@ const generateAllNotifications = async (userId) => {
 
   if (!user || !user.userInterests) return [];
 
-  const daysSinceLastWorkout = Math.floor(
-    (Date.now() - user.userInterests.lastWorkoutDate.getTime()) /
-      (1000 * 3600 * 24)
+  const daysSinceLastWorkout = calculateDaysSinceLastWorkout(
+    user.userInterests
   );
 
   const notifications = [];
