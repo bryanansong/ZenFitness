@@ -12,6 +12,15 @@ const signup = async (req, res) => {
         email,
         password: hashedPassword,
         username,
+        userInterests: {
+          create: {
+            activityScore: 0,
+            lastWorkoutDate: new Date(),
+          },
+        },
+      },
+      include: {
+        userInterests: true,
       },
     });
 
@@ -21,6 +30,7 @@ const signup = async (req, res) => {
 
     res.json({ token });
   } catch (error) {
+    console.error("Error during signup:", error);
     res.status(400).json({ error: "Unable to create user" });
   }
 };

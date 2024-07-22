@@ -8,9 +8,10 @@ import { router as workoutSessionRoutes } from "./routes/workoutSessionsRoutes.j
 import { router as userStatistics } from "./routes/userStatisticsRoutes.js";
 import { router as templateStatistics } from "./routes/templateStatisticsRoutes.js";
 import { router as profileRoutes } from "./routes/profileRoutes.js";
-import notificationRoutes from  "./routes/notificationRoutes.js";
+import notificationRoutes from "./routes/notificationRoutes.js";
 import { Server } from "socket.io";
 import { createServer } from "node:http";
+import { scheduleNotificationJob } from "./notifications/notificationJob.js";
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -44,7 +45,7 @@ app.use("/template-statistics", templateStatistics);
 // START SOCKET
 io.on("connection", (socket) => {
   socket.on("authenticate", (userId) => {
-    socket.join(userId);
+    socket.join(userId.toString());
     console.log(`User ${userId} authenticated`);
   });
 
@@ -52,6 +53,8 @@ io.on("connection", (socket) => {
     console.log("User disconnected");
   });
 });
+
+scheduleNotificationJob(io);
 
 // START SERVER
 server.listen(PORT, () => {
