@@ -19,7 +19,7 @@ const evaluateDecisionTree = (userInterest, notifications) => {
     return groupedNotifications["motivation"]?.[0];
   }
 
-  if (groupedNotifications["achievement"]) {
+  if (userInterest.activityScore >= 70 && groupedNotifications["achievement"]) {
     return groupedNotifications["achievement"][0];
   }
 
