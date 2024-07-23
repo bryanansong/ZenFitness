@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Header from "../../components/Header/Header";
 import SessionHistory from "../../components/SessionHistory/SessionHistory";
+import WorkoutHeatmap from "../../components/WorkoutHeatmap/WorkoutHeatmap";
 import styles from "./History.module.css";
 
 const History = () => {
@@ -72,6 +73,8 @@ const History = () => {
     <div className={styles.container}>
       <Header />
       <div className={styles.content}>
+        <p className={styles.pageTitle}>Workout Activity</p>
+        <WorkoutHeatmap />
         <p className={styles.pageTitle}>Overview</p>
         <div className={styles.overviewTiles}>
           <div className={styles.overviewSide}>
@@ -80,7 +83,6 @@ const History = () => {
               <p className={styles.tileHeroText}>Workouts performed so far</p>
             </div>
           </div>
-
           <div className={styles.overviewSide}>
             <div className={styles.overviewUpper}>
               <div className={`${styles.tile} ${styles.timeTile}`}>
