@@ -1,4 +1,5 @@
 import { calculateDaysSinceLastWorkout, prisma } from "../utils/helpers.js";
+import { getTopCategories } from "./userInterestTracker.js";
 
 const generateAllNotifications = async (userId) => {
   const user = await prisma.user.findUnique({
@@ -29,20 +30,18 @@ const generateAllNotifications = async (userId) => {
     });
   }
 
-  // Find the highest interest
-  const highestInterest = user.userInterests.interests.reduce(
-    (max, interest) => (interest.score > max.score ? interest : max),
-    { score: 0, category: "" }
-  );
+  const topCategories = await getTopCategories(userId, 3);
 
-  if (highestInterest.score > 70) {
-    const recommendedTemplate = await prisma.workoutTemplate.findFirst({
+  if (topCategories.length > 0) {
+    const recommendedTemplates = await prisma.workoutTemplate.findMany({
       where: {
         isPublic: true,
         exercises: {
           some: {
             exercise: {
-              name: { contains: highestInterest.category },
+              name: {
+                in: topCategories,
+              },
             },
           },
         },
@@ -52,12 +51,13 @@ const generateAllNotifications = async (userId) => {
           select: { username: true },
         },
       },
+      take: 3,
     });
 
-    if (recommendedTemplate) {
+    for (const template of recommendedTemplates) {
       notifications.push({
         type: "template_recommendation",
-        content: `Check out this ${highestInterest.category} workout template made by @${recommendedTemplate.user.username}: ${recommendedTemplate.name}`,
+        content: `Check out this workout template made by @${template.user.username}: ${template.name}`,
       });
     }
   }
