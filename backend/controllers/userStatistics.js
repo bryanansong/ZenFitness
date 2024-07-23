@@ -116,4 +116,37 @@ const getUserExerciseHistory = async (userId) => {
   }
 };
 
-export { getUserStatistics, getUserExerciseHistory };
+const getWorkoutHeatmapData = async (req, res) => {
+  const userId = req.userId;
+  const endDate = new Date();
+  const startDate = new Date(endDate);
+  startDate.setFullYear(startDate.getFullYear() - 1);
+
+  try {
+    const workouts = await prisma.workoutSession.findMany({
+      where: {
+        userId: userId,
+        date: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+      select: {
+        date: true,
+      },
+    });
+
+    const heatmapData = {};
+    workouts.forEach((workout) => {
+      const dateString = workout.date.toISOString().split("T")[0];
+      heatmapData[dateString] = (heatmapData[dateString] || 0) + 1;
+    });
+
+    res.json(heatmapData);
+  } catch (error) {
+    console.error("Error fetching workout heatmap data:", error);
+    res.status(500).json({ error: "Failed to fetch workout heatmap data" });
+  }
+};
+
+export { getUserStatistics, getUserExerciseHistory, getWorkoutHeatmapData };
