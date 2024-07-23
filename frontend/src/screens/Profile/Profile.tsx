@@ -5,6 +5,7 @@ import WorkoutTemplateCard from "../../components/WorkoutTemplateCard/WorkoutTem
 import SessionHistory from "../../components/SessionHistory/SessionHistory";
 import followIcon from "../../assets/followIcon.svg";
 import unfollowIcon from "../../assets/unfollowIcon.svg";
+import Loader from "../Loader/Loader";
 
 const Profile = () => {
   const { userId } = useParams<{ userId: string }>();
@@ -115,9 +116,7 @@ const Profile = () => {
     }
   };
 
-  if (!user) {
-    return <div className={styles.loading}>Loading...</div>;
-  }
+  if (!user) return <Loader />;
 
   return (
     <div className={styles.profileContainer}>

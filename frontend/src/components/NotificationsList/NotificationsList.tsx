@@ -5,20 +5,25 @@ import {
 } from "../../api/notifications";
 import styles from "./NotificationsList.module.css";
 import { toast } from "react-toastify";
+import Loader from "../../screens/Loader/Loader";
 
 const NotificationsList: React.FC = () => {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetchNotifications();
   }, []);
 
   const fetchNotifications = async () => {
+    setIsLoading(true);
     try {
       const fetchedNotifications = await getNotifications();
       setNotifications(fetchedNotifications);
     } catch (error) {
       console.error("Failed to fetch notifications:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -30,11 +35,13 @@ const NotificationsList: React.FC = () => {
           notif.id === notificationId ? { ...notif, status: "read" } : notif
         )
       );
-      toast(res.message)
+      toast(res.message);
     } catch (error) {
       console.error("Failed to mark notification as read:", error);
     }
   };
+
+  if (isLoading) return <Loader />;
 
   return (
     <div className={styles.notificationsContainer}>

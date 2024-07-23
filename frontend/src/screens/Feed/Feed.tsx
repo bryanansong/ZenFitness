@@ -4,13 +4,16 @@ import styles from "./Feed.module.css";
 import FeedListItem from "../../components/FeedListItem/FeedListItem";
 import arrowRight from "../../assets/arrow-circle-right.svg";
 import arrowLeft from "../../assets/arrow-circle-left.svg";
+import Loader from "../Loader/Loader";
 
 const Feed = () => {
   const [postList, setPostList] = useState<WorkoutTemplate[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchTemplates = async (page = 1) => {
+    setIsLoading(true);
     try {
       const response = await fetch(
         `${
@@ -33,6 +36,8 @@ const Feed = () => {
       setTotalPages(data.totalPages);
     } catch (err: any) {
       console.error(err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -51,6 +56,8 @@ const Feed = () => {
       fetchTemplates(currentPage - 1);
     }
   };
+
+  if (isLoading) return <Loader />;
 
   return (
     <div className={styles.container}>
