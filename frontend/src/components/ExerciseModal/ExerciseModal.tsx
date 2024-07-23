@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./ExerciseModal.module.css";
+import Loader from "../../screens/Loader/Loader";
 
 interface ExerciseModalProps {
   exercise: string;
@@ -26,9 +27,11 @@ const ExerciseModal: React.FC<ExerciseModalProps> = ({ exercise, onClose }) => {
     secondaryMuscles: [],
     images: [],
   });
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const handleFetch = async (exerciseName: string) => {
+      setIsLoading(true);
       try {
         const options = {
           method: "GET",
@@ -50,10 +53,14 @@ const ExerciseModal: React.FC<ExerciseModalProps> = ({ exercise, onClose }) => {
         setExerciseData(exerciseData);
       } catch (error) {
         console.error("Error fetching exercise info:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
     handleFetch(exercise);
   }, []);
+
+  if (isLoading) return <Loader />;
 
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
