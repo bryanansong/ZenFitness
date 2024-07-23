@@ -4,13 +4,14 @@ import WorkoutTemplateCard from "../../components/WorkoutTemplateCard/WorkoutTem
 import Header from "../../components/Header/Header";
 import CreateTemplateCard from "../../components/CreateTemplateCard/CreateTemplateCard";
 import WorkoutSessionModal from "../../components/WorkoutSessionModal/WorkoutSessionModal";
+import Loader from "../Loader/Loader";
 
 const Dashboard = () => {
   const [templateList, setTemplateList] = useState<WorkoutTemplate[]>([]);
-
   const [isWorkoutSessionOpen, setIsWorkoutSessionOpen] = useState(false);
   const [selectedTemplate, setSelectedTemplate] =
     useState<WorkoutTemplate | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleTemplateClick = (template: WorkoutTemplate) => {
     setSelectedTemplate(template);
@@ -18,6 +19,7 @@ const Dashboard = () => {
   };
 
   const fetchTemplates = async () => {
+    setIsLoading(true);
     try {
       const response = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/workout-templates`,
@@ -36,12 +38,16 @@ const Dashboard = () => {
       setTemplateList(data);
     } catch (err: any) {
       console.error(err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     fetchTemplates();
   }, []);
+
+  if (isLoading) return <Loader />;
 
   return (
     <div className={styles.dashboardContainer}>
@@ -50,7 +56,9 @@ const Dashboard = () => {
           onClose={() => setIsWorkoutSessionOpen(false)}
           template={selectedTemplate}
         />
-      ) : <></>}
+      ) : (
+        <></>
+      )}
       <Header />
       <div className={styles.dashboardContent}>
         <p className={styles.pageTitle}>Dashboard</p>

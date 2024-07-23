@@ -3,6 +3,7 @@ import Header from "../../components/Header/Header";
 import SessionHistory from "../../components/SessionHistory/SessionHistory";
 import WorkoutHeatmap from "../../components/WorkoutHeatmap/WorkoutHeatmap";
 import styles from "./History.module.css";
+import Loader from "../Loader/Loader";
 
 const History = () => {
   const [totalTimeWorkingout, setTotalTimeWorkingout] = useState(0);
@@ -10,6 +11,7 @@ const History = () => {
   const [favoriteExercise, setFavoriteExercise] = useState("...");
   const [streak, setStreak] = useState(0);
   const [pastSessions, setPastSessions] = useState<WorkoutSession[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchWorkoutStatistics = async () => {
     try {
@@ -65,9 +67,23 @@ const History = () => {
   };
 
   useEffect(() => {
-    fetchWorkoutStatistics();
-    fetchPastSessions();
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        await Promise.all([fetchWorkoutStatistics(), fetchPastSessions()]);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className={styles.container}>

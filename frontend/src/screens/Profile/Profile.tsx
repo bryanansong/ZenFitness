@@ -5,30 +5,42 @@ import WorkoutTemplateCard from "../../components/WorkoutTemplateCard/WorkoutTem
 import SessionHistory from "../../components/SessionHistory/SessionHistory";
 import followIcon from "../../assets/followIcon.svg";
 import unfollowIcon from "../../assets/unfollowIcon.svg";
+import Loader from "../Loader/Loader";
 
 const Profile = () => {
   const { userId } = useParams<{ userId: string }>();
   const [user, setUser] = useState<User | null>(null);
   const [isFollowing, setIsFollowing] = useState(false);
   const [isCurrentUser, setIsCurrentUser] = useState(false);
+  const options = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  };
 
   useEffect(() => {
-    fetchUserProfile();
-    checkFollowStatus();
-    checkCurrentUser();
+    const fetchAllData = async () => {
+      try {
+        await Promise.all([
+          fetchUserProfile(),
+          checkFollowStatus(),
+          checkCurrentUser(),
+        ]);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchAllData();
   }, [userId]);
 
   const fetchUserProfile = async () => {
     try {
       const response = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/profile/${userId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
+        options
       );
       if (response.ok) {
         const userData = await response.json();
@@ -45,13 +57,7 @@ const Profile = () => {
     try {
       const response = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/profile/${userId}/follow-status`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
+        options
       );
       if (response.ok) {
         const { isFollowing } = await response.json();
@@ -66,13 +72,7 @@ const Profile = () => {
     try {
       const response = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/profile/current-user`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
+        options
       );
       if (response.ok) {
         const { id } = await response.json();
@@ -105,9 +105,7 @@ const Profile = () => {
     }
   };
 
-  if (!user) {
-    return <div className={styles.loading}>Loading...</div>;
-  }
+  if (!user) return <Loader />;
 
   return (
     <div className={styles.profileContainer}>
