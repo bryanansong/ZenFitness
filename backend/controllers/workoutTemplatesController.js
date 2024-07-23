@@ -1,4 +1,5 @@
 import { prisma } from "../utils/helpers.js";
+import { updateUserInterestCategories } from "../notifications/userInterestTracker.js";
 
 const createWorkoutTemplate = async (req, res) => {
   const { name, exercises, isPublic } = req.body;
@@ -39,6 +40,11 @@ const createWorkoutTemplate = async (req, res) => {
           },
         },
       },
+    });
+
+    // Track template creation
+    await updateUserInterestCategories(userId, "CREATE_TEMPLATE", {
+      exercises: exercises.map((e) => ({ name: e })),
     });
 
     res.status(201).json(workoutTemplate);
@@ -142,7 +148,13 @@ const copyWorkoutTemplate = async (req, res) => {
     // Find original template
     const originalTemplate = await prisma.workoutTemplate.findUnique({
       where: { id: parsedTemplateId },
-      include: { exercises: true },
+      include: {
+        exercises: {
+          include: {
+            exercise: true,
+          },
+        },
+      },
     });
 
     if (!originalTemplate) {
@@ -168,6 +180,13 @@ const copyWorkoutTemplate = async (req, res) => {
     await prisma.workoutTemplate.update({
       where: { id: parsedTemplateId },
       data: { copyCount: { increment: 1 } },
+    });
+
+    // Track template copy
+    await updateUserInterestCategories(userId, "COPY_TEMPLATE", {
+      exercises: originalTemplate.exercises.map((e) => ({
+        name: e.exercise.name,
+      })),
     });
 
     res.status(201).json(copiedTemplate);
@@ -272,6 +291,13 @@ const vote = async (req, res) => {
           },
         },
       },
+    });
+
+    // Track voting action
+    await updateUserInterestCategories(userId, "VOTE_TEMPLATE", {
+      exercises: updatedTemplate.exercises.map((e) => ({
+        name: e.exercise.name,
+      })),
     });
 
     res.json(updatedTemplate);
