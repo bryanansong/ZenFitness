@@ -12,57 +12,22 @@ const Profile = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isFollowing, setIsFollowing] = useState(false);
   const [isCurrentUser, setIsCurrentUser] = useState(false);
+  const options = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  };
 
   useEffect(() => {
     const fetchAllData = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const options = {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        };
-
-        const [userProfileResponse, followStatusResponse, currentUserResponse] =
-          await Promise.all([
-            fetch(
-              `${import.meta.env.VITE_BACKEND_URL}/profile/${userId}`,
-              options
-            ),
-            fetch(
-              `${
-                import.meta.env.VITE_BACKEND_URL
-              }/profile/${userId}/follow-status`,
-              options
-            ),
-            fetch(
-              `${import.meta.env.VITE_BACKEND_URL}/profile/current-user`,
-              options
-            ),
-          ]);
-
-        if (userProfileResponse.ok) {
-          const userData = await userProfileResponse.json();
-          setUser(userData);
-        } else {
-          console.error("Failed to fetch user profile");
-        }
-
-        if (followStatusResponse.ok) {
-          const { isFollowing } = await followStatusResponse.json();
-          setIsFollowing(isFollowing);
-        } else {
-          console.error("Failed to fetch follow status");
-        }
-
-        if (currentUserResponse.ok) {
-          const { id } = await currentUserResponse.json();
-          setIsCurrentUser(id === parseInt(userId ? userId : "0"));
-        } else {
-          console.error("Failed to fetch current user data");
-        }
+        await Promise.all([
+          fetchUserProfile(),
+          checkFollowStatus(),
+          checkCurrentUser(),
+        ]);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -75,13 +40,7 @@ const Profile = () => {
     try {
       const response = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/profile/${userId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
+        options
       );
       if (response.ok) {
         const userData = await response.json();
@@ -91,6 +50,36 @@ const Profile = () => {
       }
     } catch (error) {
       console.error("Error fetching user profile:", error);
+    }
+  };
+
+  const checkFollowStatus = async () => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/profile/${userId}/follow-status`,
+        options
+      );
+      if (response.ok) {
+        const { isFollowing } = await response.json();
+        setIsFollowing(isFollowing);
+      }
+    } catch (error) {
+      console.error("Error checking follow status:", error);
+    }
+  };
+
+  const checkCurrentUser = async () => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/profile/current-user`,
+        options
+      );
+      if (response.ok) {
+        const { id } = await response.json();
+        setIsCurrentUser(id === parseInt(userId ? userId : "0"));
+      }
+    } catch (error) {
+      console.error("Error checking current user:", error);
     }
   };
 
