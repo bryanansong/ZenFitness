@@ -43,7 +43,7 @@ const processUserNotifications = async (userId, io) => {
 };
 
 const scheduleNotificationJob = (io) => {
-  schedule("0 10 * * *", async () => {
+  schedule("0 10 * * *", async () => { // Schedule for 10 AM everyday
     const users = await prisma.user.findMany();
 
     for (const user of users) {
