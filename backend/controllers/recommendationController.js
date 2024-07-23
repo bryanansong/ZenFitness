@@ -2,6 +2,7 @@ import { prisma } from "../utils/helpers.js";
 import { calculateNetVotes } from "./templateStatisticsController.js";
 import { getPublicTemplates } from "./workoutTemplatesController.js";
 import { getUserExerciseHistory } from "./userStatistics.js";
+import { getTopCategories } from "../notifications/userInterestTracker.js";
 
 const weights = {
   copyCount: 0.5,
@@ -103,7 +104,7 @@ const calculatePersonalizationFactor = async (template, userId) => {
     include: { following: true },
   });
 
-  const userExercises = await getUserExerciseHistory(userId);
+  const topCategories = await getTopCategories(userId, 5);
 
   // Check if user follows the template creator
   const userFollowsFactor = user.following.some(
@@ -112,15 +113,19 @@ const calculatePersonalizationFactor = async (template, userId) => {
     ? 1.2
     : 1;
 
-  // Calculate exercise similarity
+  // Calculate exercise similarity based on top categories
   const templateExercises = template.exercises.map(
-    (exercise) => exercise.exerciseId
+    (exercise) => exercise.exercise.name
   );
   const commonExercises = templateExercises.filter((exercise) =>
-    userExercises.includes(exercise)
+    topCategories.includes(exercise)
   );
+
   const similarityFactor =
-    1 + (commonExercises.length / templateExercises.length) * 0.1;
+    1 +
+    (commonExercises.length /
+      Math.min(templateExercises.length, topCategories.length)) *
+      0.2;
 
   return userFollowsFactor * similarityFactor;
 };
