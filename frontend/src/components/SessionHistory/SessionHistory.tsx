@@ -1,10 +1,17 @@
+import { useState } from "react";
 import styles from "./SessionHistory.module.css";
+import ExerciseModal from "../ExerciseModal/ExerciseModal";
 
 type SessionHistoryProps = {
   session: WorkoutSession;
 };
 
 const SessionHistory: React.FC<SessionHistoryProps> = ({ session }) => {
+    const [selectedExercise, setSelectedExercise] = useState<string | null>("");
+
+    const handleExerciseClick = (exerciseName: string) => {
+      setSelectedExercise(exerciseName);
+    };
   const formatDate = (date: Date) => {
     const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const months = [
@@ -40,6 +47,12 @@ const SessionHistory: React.FC<SessionHistoryProps> = ({ session }) => {
 
   return (
     <div className={styles.container}>
+      {selectedExercise && (
+        <ExerciseModal
+          exercise={selectedExercise}
+          onClose={() => setSelectedExercise(null)}
+        />
+      )}
       <p className={styles.cardTitle}>
         {session.workoutTemplate.name}
         <span className={styles.dateAndDuration}>
@@ -49,7 +62,12 @@ const SessionHistory: React.FC<SessionHistoryProps> = ({ session }) => {
       </p>
       <div className={styles.exerciseList}>
         {session?.workoutSets.map((set, index) => (
-          <div key={index}>
+          <div
+            key={index}
+            onClick={() =>
+              handleExerciseClick(set.exercise.name)
+            }
+          >
             <div className={styles.exerciseItem}>
               <span className={styles.exerciseName}>
                 {set.exercise.name.replaceAll("_", " ")}
