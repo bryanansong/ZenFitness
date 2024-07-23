@@ -118,10 +118,13 @@ const WorkoutHeatmap: React.FC = () => {
                   className={`${styles.heatmapCell} ${getColorClass(
                     day.count
                   )}`}
-                  title={`${day.date.toDateString()}: ${day.count} workout${
+                >
+                  <span
+                    className={styles.tooltip}
+                  >{`${day.date.toDateString()}: ${day.count} workout${
                     day.count !== 1 ? "s" : ""
-                  }`}
-                />
+                  }`}</span>
+                </div>
               ))}
             </div>
           </div>
