@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "../utils/helpers.js";
+import { updateUserInterestCategories } from "../notifications/userInterestTracker.js";
 
 const createWorkoutSession = async (req, res) => {
   const { workoutTemplateId, date, duration, completionStatus, workoutSets } =
@@ -50,6 +51,12 @@ const createWorkoutSession = async (req, res) => {
         },
         workoutTemplate: true,
       },
+    });
+
+    await updateUserInterestCategories(userId, "COMPLETE_WORKOUT", {
+      exercises: workoutSession.workoutSets.map((set) => ({
+        name: set.exercise.name,
+      })),
     });
 
     res.status(201).json(workoutSession);
