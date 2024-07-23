@@ -1,0 +1,74 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background-color: var(--primary);
+  border-radius: var(--card-radius);
+  padding: 2rem;
+  max-width: 60%;
+  max-height: 80%;
+  overflow-y: auto;
+  color: white;
+}
+
+.modalTitle {
+  font-size: 2rem;
+  font-weight: 300;
+  margin-bottom: 1rem;
+}
+
+.modalBody {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.exerciseInfo p {
+  margin: 0.5rem 0;
+}
+
+.instructions ol {
+  padding-left: 1.5rem;
+}
+
+.instructions li {
+  margin-bottom: 0.5rem;
+}
+
+.images {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.images img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--card-radius);
+}
+
+.closeButton {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--secondary);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.closeButton:hover {
+  background-color: #444;
+}
