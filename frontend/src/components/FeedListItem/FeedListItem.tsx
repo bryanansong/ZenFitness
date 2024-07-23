@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styles from "./FeedListItem.module.css";
 import { Link } from "react-router-dom";
+import ExerciseModal from "../ExerciseModal/ExerciseModal";
 
 type FeedListItemProps = {
   post: WorkoutTemplate;
@@ -9,6 +10,11 @@ type FeedListItemProps = {
 const FeedListItem: React.FC<FeedListItemProps> = ({ post }) => {
   const [upvote, setUpvote] = useState<boolean | null>(null);
   const [netVotes, setNetVotes] = useState<number>(0);
+  const [selectedExercise, setSelectedExercise] = useState<string | null>("");
+
+  const handleExerciseClick = (exerciseName: string) => {
+    setSelectedExercise(exerciseName);
+  };
 
   const fetchNetVotes = async () => {
     try {
@@ -105,6 +111,12 @@ const FeedListItem: React.FC<FeedListItemProps> = ({ post }) => {
 
   return (
     <div className={styles.container}>
+      {selectedExercise && (
+        <ExerciseModal
+          exercise={selectedExercise}
+          onClose={() => setSelectedExercise(null)}
+        />
+      )}
       <div className={styles.overview}>
         <h1 className={styles.templateName}>{post.name}</h1>
         <Link to={`/profile/${post.userId}`}>
@@ -198,7 +210,13 @@ const FeedListItem: React.FC<FeedListItemProps> = ({ post }) => {
       <hr className={styles.divider} />
       <div className={styles.exerciseList}>
         {post.exercises.map((workoutTemplateExercise, index) => (
-          <div key={index} className={styles.exerciseItem}>
+          <div
+            key={index}
+            className={styles.exerciseItem}
+            onClick={() =>
+              handleExerciseClick(workoutTemplateExercise.exercise.name)
+            }
+          >
             <p>{workoutTemplateExercise.exercise.name.replaceAll("_", " ")}</p>
           </div>
         ))}
