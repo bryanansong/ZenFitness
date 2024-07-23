@@ -1,6 +1,12 @@
 import { prisma } from "../utils/helpers.js";
 
 const DAYS_TO_CONSIDER = 14;
+const ACTION_SCORES = {
+  CREATE_TEMPLATE: 5,
+  COMPLETE_WORKOUT: 3,
+  COPY_TEMPLATE: 2,
+  VOTE_TEMPLATE: 1,
+};
 
 const calculateRecentActivityScore = async (userId) => {
   try {
@@ -77,13 +83,6 @@ const calculateRecentActivityScore = async (userId) => {
   }
 };
 
-const ACTION_SCORES = {
-  CREATE_TEMPLATE: 5,
-  COMPLETE_WORKOUT: 3,
-  COPY_TEMPLATE: 2,
-  VOTE_TEMPLATE: 1,
-};
-
 const updateUserInterestCategories = async (userId, action, data) => {
   const userInterest = await prisma.userInterest.findUnique({
     where: { userId },
@@ -135,4 +134,24 @@ const updateUserInterestCategories = async (userId, action, data) => {
   });
 };
 
-export { calculateRecentActivityScore, updateUserInterestCategories };
+const getTopCategories = async (userId, count = 3) => {
+  const userInterest = await prisma.userInterest.findUnique({
+    where: { userId },
+    include: { interests: true },
+  });
+
+  if (!userInterest) {
+    return [];
+  }
+
+  return userInterest.interests
+    .sort((a, b) => b.score - a.score)
+    .slice(0, count)
+    .map((interest) => interest.category);
+};
+
+export {
+  calculateRecentActivityScore,
+  updateUserInterestCategories,
+  getTopCategories,
+};
