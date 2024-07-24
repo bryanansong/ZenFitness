@@ -5,6 +5,7 @@ import feedIcon from "../../assets/feedIcon.svg";
 import historyIcon from "../../assets/historyIcon.svg";
 import logoutIcon from "../../assets/logoutIcon.svg";
 import bellIcon from "../../assets/bellIcon.svg";
+import messagesIcon from "../../assets/messagesIcon.svg";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
@@ -46,6 +47,14 @@ const SideBar = () => {
             <img src={feedIcon} alt="" />
           </div>
           <p className={styles.sectionName}>Feed</p>
+        </div>
+      </Link>
+      <Link to={`/messages`}>
+        <div className={styles.sidebarSection}>
+          <div className={styles.svg}>
+            <img src={messagesIcon} alt="" />
+          </div>
+          <p className={styles.sectionName}>Messages</p>
         </div>
       </Link>
       <Link to={`/history`}>

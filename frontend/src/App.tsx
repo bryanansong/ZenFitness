@@ -13,6 +13,7 @@ import { jwtDecode } from "jwt-decode";
 import io from "socket.io-client";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Messages from "./screens/Messages/Messages";
 
 type ProtectedRouteProps = {
   children: React.ReactNode;
@@ -120,6 +121,14 @@ const App = () => {
           element={
             <ProtectedRoute>
               <Notifications />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/messages"
+          element={
+            <ProtectedRoute>
+              <Messages />
             </ProtectedRoute>
           }
         />
