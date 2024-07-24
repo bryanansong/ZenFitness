@@ -2,6 +2,7 @@
   width: 300px;
   border-right: 1px solid var(--border-color);
   overflow-y: auto;
+  border-right: var(--border-styling);
 }
 
 .title {
