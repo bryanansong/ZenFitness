@@ -88,4 +88,19 @@ declare global {
     createdAt: string;
     status: string;
   }
+
+  type Message = {
+    id: number;
+    senderId: number;
+    content: string;
+    timestamp: string;
+  };
+
+  type Chat = {
+    id: number;
+    participants: User[];
+    messages: Message[];
+    lastMessage?: string;
+    otherUser: User;
+  };
 }
