@@ -47,7 +47,13 @@ const Messages: React.FC = () => {
         selectedChat={selectedChat}
         onSelectChat={setSelectedChat}
       />
-      {selectedChat && <ChatRoom chatId={selectedChat} socket={socket} />}
+      {selectedChat ? (
+        <ChatRoom chatId={selectedChat} socket={socket} />
+      ) : (
+        <div className={styles.noChatRoomContainer}>
+          <p className={styles.noChatRoomText}>No Chat selected</p>
+        </div>
+      )}
     </div>
   );
 };
