@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  getOrCreateChat,
   getChats,
   getMessages,
   createMessage,
@@ -7,6 +8,7 @@ import {
 
 const router = Router();
 
+router.post("/create-chat/:userId", getOrCreateChat);
 router.get("/chats", getChats);
 router.get("/:chatId", getMessages);
 router.post("/", createMessage);
