@@ -1,3 +1,5 @@
+import { getMaxValuesWithCache } from "../controllers/recommendationController.js";
+import { getTemplateRecommendationScore } from "../templateRecs/templateRecommendation.js";
 import { calculateDaysSinceLastWorkout, prisma } from "../utils/helpers.js";
 import { getTopCategories } from "./userInterestTracker.js";
 
@@ -33,7 +35,7 @@ const generateAllNotifications = async (userId) => {
   const topCategories = await getTopCategories(userId, 3);
 
   if (topCategories.length > 0) {
-    const recommendedTemplates = await prisma.workoutTemplate.findMany({
+    const publicTemplates = await prisma.workoutTemplate.findMany({
       where: {
         isPublic: true,
         exercises: {
@@ -48,18 +50,34 @@ const generateAllNotifications = async (userId) => {
       },
       include: {
         user: {
-          select: { username: true },
+          include: { followers: true },
         },
       },
-      take: 3,
+      take: 10,
     });
 
-    for (const template of recommendedTemplates) {
-      notifications.push({
-        type: "template_recommendation",
-        content: `Check out this workout template made by @${template.user.username}: ${template.name}`,
-      });
-    }
+    const maxValues = await getMaxValuesWithCache(publicTemplates);
+
+    const scoredTemplates = await Promise.all(
+      publicTemplates.map(async (template) => ({
+        ...template,
+        notifScore: await getTemplateRecommendationScore(
+          template,
+          userId,
+          maxValues
+        ),
+      }))
+    );
+    // Sort templates
+    scoredTemplates.sort((a, b) => b.notifScore - a.notifScore);
+
+    // Pick top scored template
+    const selectedTemplate = scoredTemplates[0];
+
+    notifications.push({
+      type: "template_recommendation",
+      content: `Check out this workout template made by @${selectedTemplate.user.username}: ${selectedTemplate.name}`,
+    });
   }
 
   const workoutCount = user.workoutSessions.length;
