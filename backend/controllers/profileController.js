@@ -1,4 +1,5 @@
 import { prisma } from "../utils/helpers.js";
+import { checkFollowAndCreateChat } from "./messageController.js";
 
 const getProfile = async (req, res) => {
   try {
@@ -84,6 +85,7 @@ const followUser = async (req, res) => {
     });
 
     res.json({ message: "User followed successfully" });
+    await checkFollowAndCreateChat(followerId, followingId);
   } catch (error) {
     console.error("Error following user:", error);
     res.status(500).json({ error: "Failed to follow user" });
