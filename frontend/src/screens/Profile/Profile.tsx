@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styles from "./Profile.module.css";
 import WorkoutTemplateCard from "../../components/WorkoutTemplateCard/WorkoutTemplateCard";
 import SessionHistory from "../../components/SessionHistory/SessionHistory";
 import followIcon from "../../assets/followIcon.svg";
 import unfollowIcon from "../../assets/unfollowIcon.svg";
+import messageIcon from "../../assets/messageIcon.svg";
 import Loader from "../Loader/Loader";
 
 const Profile = () => {
@@ -12,6 +13,8 @@ const Profile = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isFollowing, setIsFollowing] = useState(false);
   const [isCurrentUser, setIsCurrentUser] = useState(false);
+  const navigate = useNavigate();
+
   const options = {
     method: "GET",
     headers: {
@@ -105,6 +108,30 @@ const Profile = () => {
     }
   };
 
+    const handleMessageClick = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/messages/create-chat/${userId}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const { chatId } = await response.json();
+          navigate(`/messages?chatId=${chatId}`);
+        } else {
+          console.error("Failed to create or retrieve chat");
+        }
+      } catch (error) {
+        console.error("Error creating/retrieving chat:", error);
+      }
+    };
+
   if (!user) return <Loader />;
 
   return (
@@ -112,19 +139,35 @@ const Profile = () => {
       <div className={styles.profileHeader}>
         <h1 className={styles.username}>{user.username}</h1>
         {!isCurrentUser && (
-          <button className={styles.followButton} onClick={handleFollowToggle}>
-            {isFollowing ? (
-              <div className={styles.followButtonContent}>
-                <img src={unfollowIcon} alt="" />
-                <p>Unfollow</p>
-              </div>
-            ) : (
-              <div className={styles.followButtonContent}>
-                <img src={followIcon} alt="" />
-                <p>Follow</p>
-              </div>
+          <>
+            {isFollowing && ( // Only show message button if the current user is following this profile
+              <button
+                className={styles.messageButton}
+                onClick={handleMessageClick}
+              >
+                <div className={styles.messageButtonContent}>
+                  <img src={messageIcon} alt="" />
+                  <p>Message</p>
+                </div>
+              </button>
             )}
-          </button>
+            <button
+              className={styles.followButton}
+              onClick={handleFollowToggle}
+            >
+              {isFollowing ? (
+                <div className={styles.followButtonContent}>
+                  <img src={unfollowIcon} alt="" />
+                  <p>Unfollow</p>
+                </div>
+              ) : (
+                <div className={styles.followButtonContent}>
+                  <img src={followIcon} alt="" />
+                  <p>Follow</p>
+                </div>
+              )}
+            </button>
+          </>
         )}
       </div>
       <div className={styles.stats}>
