@@ -109,45 +109,18 @@ const getOrCreateChat = async (req, res) => {
     const otherUserId = parseInt(req.params.userId);
 
     // Check if users are mutually following each other
-    const mutualFollow = await prisma.follow.findMany({
-      where: {
-        OR: [
-          { followerId: currentUserId, followingId: otherUserId },
-          { followerId: otherUserId, followingId: currentUserId },
-        ],
-      },
-    });
+    const { mutualFollow, existingChat, newChat } =
+      await checkFollowAndCreateChat(currentUserId, otherUserId);
 
-    if (mutualFollow.length !== 2) {
-      return res
-        .status(403)
-        .json({
-          error: "Users must be mutually following each other to start a chat",
-        });
+    if (!mutualFollow) {
+      return res.status(403).json({
+        error: "Users must be mutually following each other to start a chat",
+      });
     }
-
-    // Check if a chat already exists between these users
-    const existingChat = await prisma.chat.findFirst({
-      where: {
-        AND: [
-          { participants: { some: { id: currentUserId } } },
-          { participants: { some: { id: otherUserId } } },
-        ],
-      },
-    });
 
     if (existingChat) {
       return res.json({ chatId: existingChat.id });
     }
-
-    // If no chat exists, create a new one
-    const newChat = await prisma.chat.create({
-      data: {
-        participants: {
-          connect: [{ id: currentUserId }, { id: otherUserId }],
-        },
-      },
-    });
 
     res.json({ chatId: newChat.id });
   } catch (error) {
@@ -156,5 +129,48 @@ const getOrCreateChat = async (req, res) => {
   }
 };
 
+const checkFollowAndCreateChat = async (currentUserId, otherUserId) => {
+  const mutualFollowP = await prisma.follow.findMany({
+    where: {
+      OR: [
+        { followerId: currentUserId, followingId: otherUserId },
+        { followerId: otherUserId, followingId: currentUserId },
+      ],
+    },
+  });
 
-export { getChats, getMessages, createMessage, getOrCreateChat };
+  // Check if a chat already exists between these users
+  const existingChatP = await prisma.chat.findFirst({
+    where: {
+      AND: [
+        { participants: { some: { id: currentUserId } } },
+        { participants: { some: { id: otherUserId } } },
+      ],
+    },
+  });
+
+  const mutualFollow = mutualFollowP.length === 2;
+  const existingChat = existingChatP ? true : false;
+
+  const newChat =
+    mutualFollow && !existingChat
+      ? await prisma.chat.create({
+          data: {
+            participants: {
+              connect: [{ id: currentUserId }, { id: otherUserId }],
+            },
+          },
+        })
+      : {};
+
+  console.log("Created chat, here is the Id: ", newChat.id);
+  return { mutualFollow, existingChat, newChat };
+};
+
+export {
+  getChats,
+  getMessages,
+  createMessage,
+  getOrCreateChat,
+  checkFollowAndCreateChat,
+};
