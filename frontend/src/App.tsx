@@ -15,6 +15,7 @@ import io from "socket.io-client";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Messages from "./screens/Messages/Messages";
+import ProgressPhotos from "./screens/ProgressPhotos/ProgressPhotos";
 
 type ProtectedRouteProps = {
   children: React.ReactNode;
@@ -131,6 +132,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <Messages />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/progress-photos"
+            element={
+              <ProtectedRoute>
+                <ProgressPhotos />
               </ProtectedRoute>
             }
           />
