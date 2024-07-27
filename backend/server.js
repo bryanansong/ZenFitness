@@ -13,6 +13,8 @@ import notificationRoutes from "./routes/notificationRoutes.js";
 import { Server } from "socket.io";
 import { createServer } from "node:http";
 import { scheduleNotificationJob } from "./notifications/notificationJob.js";
+import { createMessage } from "./controllers/messageController.js";
+import { prisma } from "./utils/helpers.js";
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -53,29 +55,41 @@ io.on("connection", (socket) => {
     console.log(`User ${userId} authenticated`);
   });
 
+  socket.on("join_chat", (chatId) => {
+    socket.join(`chat:${chatId}`);
+    console.log(`User joined chat: ${chatId}`);
+  });
+
+  socket.on("leave_chat", (chatId) => {
+    socket.leave(`chat:${chatId}`);
+    console.log(`User left chat: ${chatId}`);
+  });
+
   socket.on("send_message", async ({ chatId, message }) => {
     try {
-      const savedMessage = await prisma.message.create({
-        data: {
-          content: message.content,
-          senderId: message.senderId,
-          chatId: chatId,
-        },
-      });
-
       const chat = await prisma.chat.findUnique({
         where: { id: chatId },
         include: { participants: true },
       });
 
-      chat.participants.forEach((participant) => {
-        if (participant.id !== message.senderId) {
-          io.to(participant.id.toString()).emit(
-            "receive_message",
-            savedMessage
-          );
-        }
-      });
+      // Create a mock request and response object
+      const req = {
+        body: { chatId, content: message.content },
+        userId: message.senderId,
+      };
+      const res = {
+        status: () => ({
+          json: (message) => {
+            // Broadcast to all users in the chat room
+            io.to(`chat:${chatId}`).emit("receive_message", message);
+          },
+        }),
+      };
+
+      // Use the createMessage function
+      await createMessage(req, res);
+      // Broadcast to all users in the chat room
+      io.to(`chat:${chatId}`).emit("receive_message", savedMessage);
     } catch (error) {
       console.error("Error saving and broadcasting message:", error);
     }
