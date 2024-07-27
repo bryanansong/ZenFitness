@@ -1,24 +1,26 @@
 .message {
   margin-bottom: 10px;
   max-width: 70%;
+  min-width: 120px;
 }
 
 .ownMessage {
   align-self: flex-end;
   background-color: #0084ff;
   color: white;
-  border-radius: 18px 18px 0 18px;
+  border-radius: 10px 10px 0 10px;
 }
 
 .otherMessage {
   align-self: flex-start;
   background-color: #f1f0f0;
   color: black;
-  border-radius: 18px 18px 18px 0;
+  border-radius: 10px 10px 10px 0;
 }
 
 .content {
-  padding: 10px 15px;
+  padding-top: 50px;
+  padding: 0px 15px;
 }
 
 .timestamp {
