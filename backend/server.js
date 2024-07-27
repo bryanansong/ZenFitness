@@ -88,8 +88,6 @@ io.on("connection", (socket) => {
 
       // Use the createMessage function
       await createMessage(req, res);
-      // Broadcast to all users in the chat room
-      io.to(`chat:${chatId}`).emit("receive_message", savedMessage);
     } catch (error) {
       console.error("Error saving and broadcasting message:", error);
     }
