@@ -7,13 +7,10 @@ import { io } from "socket.io-client";
 const Messages: React.FC = () => {
   const [selectedChat, setSelectedChat] = useState<number | null>(null);
   const [chats, setChats] = useState<Chat[]>([]);
-  const [socket, setSocket] = useState<any>(null);
 
   useEffect(() => {
     const newSocket = io(import.meta.env.VITE_BACKEND_URL);
-    setSocket(newSocket);
 
-    // Fetch chats
     fetchChats();
 
     return () => {
@@ -48,7 +45,7 @@ const Messages: React.FC = () => {
         onSelectChat={setSelectedChat}
       />
       {selectedChat ? (
-        <ChatRoom chatId={selectedChat} socket={socket} />
+        <ChatRoom chatId={selectedChat} />
       ) : (
         <div className={styles.noChatRoomContainer}>
           <p className={styles.noChatRoomText}>No Chat selected</p>
