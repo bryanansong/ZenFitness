@@ -2,23 +2,33 @@ import React, { useState, useEffect, useRef } from "react";
 import Message from "../Message/Message";
 import MessageInput from "../MessageInput/MessageInput";
 import styles from "./ChatRoom.module.css";
+import { io, Socket } from "socket.io-client";
 
 interface ChatRoomProps {
   chatId: number;
-  socket: any;
 }
 
-const ChatRoom: React.FC<ChatRoomProps> = ({ chatId, socket }) => {
+const ChatRoom: React.FC<ChatRoomProps> = ({ chatId }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [otherUser, setOtherUser] = useState<User | null>(null);
+  const socketRef = useRef<Socket | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    socketRef.current = io(import.meta.env.VITE_BACKEND_URL);
+
+    socketRef.current.emit("join_chat", chatId);
+
+    socketRef.current.on("receive_message", handleReceiveMessage);
+
     fetchMessages();
-    socket.on("receive_message", handleReceiveMessage);
 
     return () => {
-      socket.off("receive_message", handleReceiveMessage);
+      if (socketRef.current) {
+        socketRef.current.off("receive_message");
+        socketRef.current.emit("leave_chat", chatId);
+        socketRef.current.disconnect();
+      }
     };
   }, [chatId]);
 
@@ -56,8 +66,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ chatId, socket }) => {
       content,
       timestamp: new Date().toISOString(),
     };
-    socket.emit("send_message", { chatId, message: newMessage });
-    setMessages((prevMessages) => [...prevMessages, newMessage as Message]);
+    socketRef.current?.emit("send_message", { chatId, message: newMessage });
   };
 
   const scrollToBottom = () => {
