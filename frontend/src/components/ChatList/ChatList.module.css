@@ -1,0 +1,43 @@
+.chatList {
+  width: 300px;
+  border-right: 1px solid var(--border-color);
+  overflow-y: auto;
+  border-right: var(--border-styling);
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 300;
+  padding: 20px;
+  margin: 0;
+}
+
+.chatItem {
+  padding: 15px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.chatItem:hover {
+  background-color: var(--primary);
+}
+
+.selected {
+  background-color: var(--secondary);
+}
+
+.chatName {
+  font-size: 16px;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.lastMessage {
+  font-size: 14px;
+  color: #999;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
