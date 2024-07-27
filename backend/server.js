@@ -10,6 +10,7 @@ import { router as templateStatistics } from "./routes/templateStatisticsRoutes.
 import { router as profileRoutes } from "./routes/profileRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
+import progressPhotoRoutes from "./routes/progressPhotoRoutes.js";
 import { Server } from "socket.io";
 import { createServer } from "node:http";
 import { scheduleNotificationJob } from "./notifications/notificationJob.js";
@@ -45,6 +46,7 @@ app.use("/workout-templates", workoutTemplateRoutes);
 app.use("/workout-sessions", workoutSessionRoutes);
 app.use("/user-statistics", userStatistics);
 app.use("/template-statistics", templateStatistics);
+app.use("/progress-photos", progressPhotoRoutes);
 
 // START SOCKET
 io.on("connection", (socket) => {
