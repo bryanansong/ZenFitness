@@ -87,7 +87,7 @@ declare global {
     content: string;
     createdAt: string;
     status: string;
-  }
+  };
 
   type Message = {
     id: number;
@@ -102,5 +102,15 @@ declare global {
     messages: Message[];
     lastMessage?: string;
     otherUser: User;
+  };
+
+  type ProgressPhoto = {
+    id: number;
+    userId: number;
+    user: User;
+    imageUrl: string;
+    date: Date;
+    createdAt: Date;
+    updatedAt: Date;
   };
 }

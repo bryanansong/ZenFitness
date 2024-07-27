@@ -21,6 +21,7 @@ model User {
   sentMessages     Message[]         @relation("SentMessages")
   notifications    Notification[]
   userInterests    UserInterest?
+  progressPhotos ProgressPhoto[]
 }
 
 model Follow {
@@ -153,4 +154,14 @@ model Chat {
   participants User[]    @relation("UserChats")
   messages     Message[]
   createdAt    DateTime  @default(now())
+}
+
+model ProgressPhoto {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  imageUrl  String
+  date      DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
