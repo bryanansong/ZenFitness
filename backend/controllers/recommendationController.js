@@ -1,7 +1,6 @@
 import { prisma } from "../utils/helpers.js";
 import { calculateNetVotes } from "./templateStatisticsController.js";
 import { getPublicTemplates } from "./workoutTemplatesController.js";
-import { getUserExerciseHistory } from "./userStatistics.js";
 import { getTopCategories } from "../notifications/userInterestTracker.js";
 
 const weights = {
@@ -41,8 +40,12 @@ const getMaxValuesWithCache = async (templates) => {
 
 // Helper methods
 const normalizeValue = (value, max) => (max > 0 ? value / max : 0);
-const normalizeVotes = (votes, maxAbsVotes) =>
-  (votes + maxAbsVotes) / (2 * maxAbsVotes);
+const normalizeVotes = (votes, maxAbsVotes) => {
+  if (maxAbsVotes === 0) {
+    return 0.5; // Return a neutral value when there are no votes
+  }
+  return (votes + maxAbsVotes) / (2 * maxAbsVotes);
+};
 
 // Get max values for normalization
 const getMaxValues = async (templates) => {
@@ -189,4 +192,4 @@ const getRecommendations = async (req, res) => {
   }
 };
 
-export { getRecommendations };
+export { getRecommendations, calculateBaseScore, getMaxValuesWithCache };
