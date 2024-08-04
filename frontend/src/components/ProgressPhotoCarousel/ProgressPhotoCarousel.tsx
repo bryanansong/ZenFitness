@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import styles from "./ProgressPhotoCarousel.module.css";
+import arrowRight from "../../assets/arrow-circle-right.svg";
+import arrowLeft from "../../assets/arrow-circle-left.svg";
 
 interface ProgressPhotoCarouselProps {
   photos: ProgressPhoto[];
@@ -23,7 +25,8 @@ const ProgressPhotoCarousel: React.FC<ProgressPhotoCarouselProps> = ({
   return (
     <div className={styles.carousel}>
       <button className={styles.arrowButton} onClick={prevPhoto}>
-        &lt;
+        {/* &lt; */}
+        <img src={arrowLeft} alt="Previous Page" />
       </button>
       <div className={styles.imageContainer}>
         <img
@@ -33,7 +36,8 @@ const ProgressPhotoCarousel: React.FC<ProgressPhotoCarouselProps> = ({
         />
       </div>
       <button className={styles.arrowButton} onClick={nextPhoto}>
-        &gt;
+        {/* &gt; */}
+        <img src={arrowRight} alt="Next Page" />
       </button>
     </div>
   );

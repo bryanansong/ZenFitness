@@ -39,8 +39,12 @@ const ProgressPhotos: React.FC = () => {
       <Header />
       <div className={styles.content}>
         <h1 className={styles.title}>Progress Photos</h1>
-        <ProgressPhotoUpload onPhotoUploaded={handlePhotoUploaded} />
-        <ProgressPhotoList photos={photos} />
+        <div className={styles.uploadSection}>
+          <ProgressPhotoUpload onPhotoUploaded={handlePhotoUploaded} />
+        </div>
+        <div className={styles.photoListSection}>
+          <ProgressPhotoList photos={photos} />
+        </div>
       </div>
     </div>
   );

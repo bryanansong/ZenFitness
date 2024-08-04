@@ -1,0 +1,18 @@
+.photoList {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.dateGroup {
+  background-color: var(--secondary);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.dateTitle {
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: white;
+  margin-bottom: 1rem;
+}

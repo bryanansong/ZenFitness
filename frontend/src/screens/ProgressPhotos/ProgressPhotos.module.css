@@ -2,10 +2,10 @@
   width: 100%;
   min-height: 100vh;
   background-color: var(--secondary);
+  padding: 2rem;
 }
 
 .content {
-  padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -17,8 +17,12 @@
   margin-bottom: 2rem;
 }
 
-.loadingText {
-  font-size: 1.2rem;
-  color: white;
-  text-align: center;
+.uploadSection {
+  margin-bottom: 2rem;
+}
+
+.photoListSection {
+  background-color: var(--primary);
+  border-radius: 8px;
+  padding: 2rem;
 }

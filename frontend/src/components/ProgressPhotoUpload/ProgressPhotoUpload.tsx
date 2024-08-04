@@ -56,6 +56,7 @@ const ProgressPhotoUpload: React.FC<ProgressPhotoUploadProps> = ({
 
       setFile(null);
       onPhotoUploaded();
+      toast.success("Photo uploaded successfully!");
     } catch (error) {
       console.error("Error uploading photo:", error);
       toast.error("Failed to upload photo. Please try again.");
@@ -64,8 +65,22 @@ const ProgressPhotoUpload: React.FC<ProgressPhotoUploadProps> = ({
 
   return (
     <div className={styles.uploadContainer}>
-      <input type="file" name="image" onChange={handleFileChange} accept="image/*" />
-      <button onClick={handleUpload} disabled={!file}>
+      <input
+        type="file"
+        id="photoUpload"
+        className={styles.fileInput}
+        onChange={handleFileChange}
+        accept="image/*"
+      />
+      <label htmlFor="photoUpload" className={styles.fileInputLabel}>
+        Choose Photo
+      </label>
+      {file && <span>{file.name}</span>}
+      <button
+        onClick={handleUpload}
+        disabled={!file}
+        className={styles.uploadButton}
+      >
         Upload Photo
       </button>
     </div>
